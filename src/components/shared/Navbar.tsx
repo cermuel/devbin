@@ -63,7 +63,7 @@ const Navbar = ({
             onClick={() => setshowDropDown(!showDropDown)}
             className="h-full"
           >
-            <img src={userLogo} className="h-full rounded-sm" alt="" />
+            <img src={userLogo} className="h-8 w-8 rounded-sm" alt="" />
           </button>
         </div>
       </nav>
