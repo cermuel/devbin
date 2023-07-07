@@ -51,7 +51,7 @@ const CodeEditor = ({
           fontSize: fontSize,
           readOnly: false,
           wordWrap: "on",
-          autoClosingQuotes: true,
+          autoClosingQuotes: "always",
           automaticLayout: true,
           autoClosingBrackets: "languageDefined",
           scrollbar: {
