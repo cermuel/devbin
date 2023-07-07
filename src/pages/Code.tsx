@@ -42,12 +42,12 @@ const Code = () => {
     },
   ];
 
-  window.addEventListener("keydown", (event) => {
-    if ((event.metaKey || event.ctrlKey) && event.key === "s") {
-      event.preventDefault(); // Prevent the default "Save As" browser behavior
-      alert(`ctrl + s`); // Call your save function here
-    }
-  });
+  // window.addEventListener("keydown", (event) => {
+  //   if ((event.metaKey || event.ctrlKey) && event.key === "s") {
+  //     event.preventDefault(); // Prevent the default "Save As" browser behavior
+  //     alert(`ctrl + s`); // Call your save function here
+  //   }
+  // });
   return (
     <CodeLayout
       toShow={toShow}
