@@ -2,6 +2,8 @@
 import Editor from "@monaco-editor/react";
 import { FaHtml5, FaCss3 } from "react-icons/fa";
 import { SiJavascript } from "react-icons/si";
+import { CodeSettingsCont } from "./contexts/CodeSettingsContext";
+import { useContext } from "react";
 
 const CodeEditor = ({
   theme,
@@ -16,6 +18,10 @@ const CodeEditor = ({
   toShow: string[];
   showMinScreen: string;
 }) => {
+  const { setEditorNotMounted } = useContext(CodeSettingsCont);
+  const handleEditorDidMount = (editor: any) => {
+    setEditorNotMounted(false);
+  };
   return (
     <div
       className={`md:min-w-[100px] w-full flex-grow ${
@@ -44,6 +50,7 @@ const CodeEditor = ({
         onChange={(e: any) => {
           file.setValue(e);
         }}
+        onMount={handleEditorDidMount}
         saveViewState={true}
         options={{
           formatOnType: true,

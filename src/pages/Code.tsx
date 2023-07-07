@@ -4,9 +4,10 @@ import { CodeCont } from "../contexts/CodeContext";
 import { CodeSettingsCont } from "../contexts/CodeSettingsContext";
 import CodeEditor from "../Editor";
 import HTMLRenderer from "../HTMLRender";
+import Loading from "../components/shared/Loading";
 
 const Code = () => {
-  const { theme, fontSize } = useContext(CodeSettingsCont);
+  const { theme, fontSize, editorNotMounted } = useContext(CodeSettingsCont);
   const { HTML, CSS, JS, setHTML, setCSS, setJS } = useContext(CodeCont);
   useEffect(() => {
     localStorage.setItem("HTML", HTML);
@@ -53,6 +54,7 @@ const Code = () => {
       setShowMinScreen={setshowMinScreen}
       showMinScreen={showMinScreen}
     >
+      {editorNotMounted && <Loading />}
       <>
         <section
           className={`w-screend flex gap-1 bg-pry overflow-hidden h-[50%] ${

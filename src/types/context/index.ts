@@ -16,4 +16,6 @@ export type CodeSettingsType = {
   setfontSize: Dispatch<number>;
   codeName: string;
   setCodeName: Dispatch<string>;
+  editorNotMounted: boolean;
+  setEditorNotMounted: Dispatch<boolean>;
 };

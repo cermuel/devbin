@@ -25,16 +25,16 @@ const Navbar = ({
     <>
       {showSettings && <Settings setshowSettings={setshowSettings} />}
       {showDropDown && <Dropdown setshowSettings={setshowSettings} />}
-      <nav className="h-[7vh] relative p-2 w-full border-b-[1px] gap-3 border-b-[#1e1e1e] bg-[#101010] flex justify-end">
-        <>
-          <div className="absolute px-2 left-2 h-full pt-1">
-            <input
-              type="text"
-              value={codeName}
-              onChange={(e: any) => setCodeName(e.target.value)}
-              className="text-pry md:text-xl outline-none bg-transparent font-semibold"
-            />
-          </div>
+      <nav className="h-[7vh] p-2 w-full border-b-[1px] gap-3 border-b-[#1e1e1e] bg-[#101010] flex justify-between">
+        <div className="px-2 h-full pt-1">
+          <input
+            type="text"
+            value={codeName}
+            onChange={(e: any) => setCodeName(e.target.value)}
+            className="text-pry md:text-xl outline-none bg-transparent font-semibold"
+          />
+        </div>
+        <div className="gap-3 border-b-[#1e1e1e] bg-[#101010] flex items-center">
           <button
             className="bg-pry h-full px-2 gap-2 flex text-white justify-center rounded-sm items-center"
             onClick={() => {
@@ -59,10 +59,13 @@ const Navbar = ({
             <span className="max-md:hidden">Download</span>
             <RiDownload2Line className="text-xl" />
           </button>
-          <button onClick={() => setshowDropDown(!showDropDown)}>
+          <button
+            onClick={() => setshowDropDown(!showDropDown)}
+            className="h-full"
+          >
             <img src={userLogo} className="h-full rounded-sm" alt="" />
           </button>
-        </>
+        </div>
       </nav>
       <div className="md:hidden flex gap-2 h-[4vh] bg-[#101010]">
         {toShow.map((t: string) => {
