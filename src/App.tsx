@@ -7,11 +7,13 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
+import Entry from "./pages/Entry";
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Entry />} />
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/signup" element={<Signup />} />
       </Routes>{" "}
