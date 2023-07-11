@@ -1,12 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import CodeLayout from "../components/layouts/CodeLayout";
 import { CodeCont } from "../contexts/CodeContext";
 import { CodeSettingsCont } from "../contexts/CodeSettingsContext";
-import CodeEditor from "../Editor";
-import HTMLRenderer from "../HTMLRender";
-import Loading from "../components/shared/Loading";
+import CodeEditor from "../components/code/Editor";
+import HTMLRenderer from "../components/code/HTMLRender";
+import Loading from "../components/shared/code/Loading";
+import { useNavigate } from "react-router-dom";
+import { isAuth } from "../utils/ChatUtils";
 
 const Code = () => {
+  const navigate = useNavigate();
+  useLayoutEffect(() => {
+    isAuth(navigate);
+  }, []);
   const { theme, fontSize, editorNotMounted } = useContext(CodeSettingsCont);
   const { HTML, CSS, JS, setHTML, setCSS, setJS } = useContext(CodeCont);
   useEffect(() => {
@@ -42,12 +48,6 @@ const Code = () => {
     },
   ];
 
-  // window.addEventListener("keydown", (event) => {
-  //   if ((event.metaKey || event.ctrlKey) && event.key === "s") {
-  //     event.preventDefault(); // Prevent the default "Save As" browser behavior
-  //     alert(`ctrl + s`); // Call your save function here
-  //   }
-  // });
   return (
     <CodeLayout
       toShow={toShow}
@@ -58,7 +58,7 @@ const Code = () => {
       <>
         <section
           className={`w-screend flex gap-1 bg-pry overflow-hidden h-[50%] ${
-            showMinScreen == toShow[3] && "max-md:hidden"
+            showMinScreen === toShow[3] && "max-md:hidden"
           }`}
         >
           {editors.map((file: any) => {
@@ -75,7 +75,7 @@ const Code = () => {
         </section>
         <section
           className={`w-screen h-[50%] ${
-            showMinScreen == toShow[3] ? "max-md:h-full" : "max-md:h-[50%"
+            showMinScreen === toShow[3] ? "max-md:h-full" : "max-md:h-[50%"
           }`}
         >
           <HTMLRenderer html={HTML} css={CSS} js={JS} />

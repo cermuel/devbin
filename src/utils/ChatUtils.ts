@@ -4,3 +4,11 @@ export const monacoEditorThemes = [
   "vs-dark", // Visual Studio Dark
   "hc-black", // High Contrast Black
 ];
+
+export const isAuth = (navigate: any) => {
+  const token = localStorage.getItem("devbin_token");
+  if (!token) {
+    navigate("/auth/login");
+    window.location.reload();
+  }
+};

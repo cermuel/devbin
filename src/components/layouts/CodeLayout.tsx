@@ -1,5 +1,5 @@
 import React, { Dispatch } from "react";
-import Navbar from "../shared/Navbar";
+import Navbar from "../shared/code/Navbar";
 
 const CodeLayout = ({
   children,

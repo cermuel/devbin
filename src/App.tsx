@@ -1,19 +1,30 @@
-import { useEffect, useState } from "react";
-import CodeEditor from "./Editor";
-import HTMLRenderer from "./HTMLRender";
 import socket from "socket.io-client";
-import CodeLayout from "./components/layouts/CodeLayout";
 import CodeContext from "./contexts/CodeContext";
 import Code from "./pages/Code";
 import CodeSettingsContext from "./contexts/CodeSettingsContext";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
-    <CodeContext>
-      <CodeSettingsContext>
-        <Code />
-      </CodeSettingsContext>
-    </CodeContext>
+    <Router>
+      <Routes>
+        <Route path="/auth/login" element={<Login />} />
+        <Route path="/auth/signup" element={<Signup />} />
+      </Routes>{" "}
+      <CodeContext>
+        <CodeSettingsContext>
+          <Routes>
+            <Route path="/code/bin" element={<Code />} />
+            <Route path="/code/home" element={<Home />} />
+            <Route path="/code/profile" element={<Profile />} />
+          </Routes>
+        </CodeSettingsContext>
+      </CodeContext>
+    </Router>
   );
 }
 
