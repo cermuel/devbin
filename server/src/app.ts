@@ -1,8 +1,9 @@
-import express, { Application, Request, Response, NextFunction } from "express";
+import express, { Application, Request, Response } from "express";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import { connectDB } from "./db/connect";
 require("express-async-errors");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv").config();
 const app: Application = express();
 
@@ -21,12 +22,15 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", authenticateUser, userRoutes);
 
-app.get("/", (req: Request, res: Response, next: NextFunction) => {
-  res.send("Hello world!");
+app.get("/", (req: Request, res: Response) => {
+	res.send("Hello world!");
 });
 
 io.on<"connection">("connection", (socket) => {
-  console.log("connect");
+	socket.on("message", (message) => {
+		console.log(message);
+
+	});
 });
 
 app.use(notFound);
@@ -34,15 +38,15 @@ app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 5000;
 
-const start = async (req?: Request, res?: Response) => {
-  try {
-    await connectDB(process.env.MONGO_URI || "mongodb://localhost:27017/samo");
-    http.listen(port, () => {
-      console.log("Example app listening on port 5000!");
-    });
-  } catch (error) {
-    console.log(error);
-  }
+const start = async () => {
+	try {
+		await connectDB(process.env.MONGO_URI || "mongodb://localhost:27017/samo");
+		http.listen(port, () => {
+			console.log("Example app listening on port 5000!");
+		});
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 start();
