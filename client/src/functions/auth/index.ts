@@ -61,6 +61,7 @@ export const login = async (details: logintype, navigate: any) => {
         let message =
           err?.response.data?.msg || err?.message || `An error occurred`;
         toast.error(message);
+        console.log(err);
       }
     }
   } else {
