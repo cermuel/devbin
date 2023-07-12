@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 import { IFile } from "./files.dto";
 
 const FileSchema = new Schema<IFile>({
-	name: { type: String, required: true },
+	type: { type: String, required: true, enum: ["html", "css", "js"] },
 	text: { type: String, required: true },    
 }, { timestamps: true }
 );
