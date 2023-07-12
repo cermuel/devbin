@@ -12,6 +12,7 @@ const io = new Server(http);
 
 import authRoutes from "./auth/auth.routes";
 import userRoutes from "./users/user.routes";
+import projectRoutes from "./projects/projects.routes";
 import { errorHandlerMiddleware } from "./middlewares/error.middleware";
 import { notFound } from "./middlewares/not-found.middleware";
 import { authenticateUser } from "./middlewares/auth";
@@ -21,6 +22,7 @@ app.use(cors<Request>());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", authenticateUser, userRoutes);
+app.use("/api/projects", authenticateUser, projectRoutes);
 
 app.get("/", (req: Request, res: Response) => {
 	res.send("Hello world!");

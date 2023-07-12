@@ -1,16 +1,11 @@
-import mongoose, { Types } from 'mongoose';
+import mongoose from "mongoose";
 const { Schema } = mongoose;
-
-export interface IFile {
-    fileName: string;
-    text: string;
-
-}
+import { IFile } from "./files.dto";
 
 const FileSchema = new Schema<IFile>({
-    fileName: { type: String, required: true },
-    text: { type: String, required: true },
-    
-});
+	name: { type: String, required: true },
+	text: { type: String, required: true },    
+}, { timestamps: true }
+);
 
-mongoose.model<IFile>('File', FileSchema);
+export const Files = mongoose.model<IFile>("File", FileSchema);
