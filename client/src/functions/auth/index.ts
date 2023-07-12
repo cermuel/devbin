@@ -68,3 +68,10 @@ export const login = async (details: logintype, navigate: any) => {
     toast.error("Fill in all the details");
   }
 };
+export const Logout = (navigate: any) => {
+  localStorage.removeItem("devbin_token");
+  toast.success("Successfully logged out");
+  setTimeout(() => {
+    navigate("/auth/login");
+  }, 2000);
+};

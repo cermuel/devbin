@@ -13,7 +13,10 @@ export const CodeCont = React.createContext<CodeContType>({
   CSS: localStorageValueCSS
     ? localStorageValueCSS
     : `h1{
-  color: red
+      color: red
+}
+body{
+      background-color: #737cde;
 }`,
   setCSS: () => {},
   JS: localStorageValueJS
@@ -33,7 +36,10 @@ const CodeContext = ({ children }: { children: React.ReactNode }) => {
     return localStorageValueCSS
       ? localStorageValueCSS
       : `h1{
-      color: red
+        color: red
+}
+  body{
+        background-color: #737cde;
 }`;
   });
   const [JS, setJS] = useState<string>(() => {

@@ -7,6 +7,7 @@ import Dropdown from "./Dropdown";
 import { CodeCont } from "../../../contexts/CodeContext";
 import { CodeSettingsCont } from "../../../contexts/CodeSettingsContext";
 import { downloadCodeAsZip } from "../../../config/CodeLogic";
+import { Toaster } from "react-hot-toast";
 
 const Navbar = ({
   setShowMinScreen,
@@ -26,6 +27,7 @@ const Navbar = ({
       {showSettings && <Settings setshowSettings={setshowSettings} />}
       {showDropDown && <Dropdown setshowSettings={setshowSettings} />}
       <nav className="h-[7vh] p-2 w-full border-b-[1px] gap-3 border-b-[#1e1e1e] bg-[#101010] flex justify-between">
+        <Toaster />
         <div className="px-2 h-full pt-1">
           <input
             type="text"
