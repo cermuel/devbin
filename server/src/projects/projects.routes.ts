@@ -3,7 +3,7 @@ import { Router, Request, Response } from "express";
 const router = Router();
 
 
-import { createProject, getMyProjects, getSingleProject } from "./projects.controller";
+import { createProject, getAllProjects, getMyProjects, getSingleProject } from "./projects.controller";
 import { APIResponse } from "../types";
 import { IProject } from "./projects.dto";
 import { StatusCodes } from "http-status-codes";
@@ -13,6 +13,10 @@ router.route("/").post(async (req: Request<object, object, IProject>, res: Respo
 
 	const project = await createProject(name, files, req.user);
 	res.status(StatusCodes.CREATED).json({ msg:"Project created Sucessfully", data: {project}, statusCode: StatusCodes.CREATED });
+}).get(async (req: Request, res: Response<APIResponse<{projects: IProject[]}>>) => {
+	const projects = await getAllProjects(req.query);
+	res.status(StatusCodes.OK).
+		json({ msg:"Projects fetched Sucessfully", data: {projects}, statusCode:StatusCodes.OK });
 });
 
 router.get("/my", async (req: Request, res: Response<APIResponse<{projects: IProject[]}>>) => {

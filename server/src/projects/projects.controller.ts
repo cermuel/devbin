@@ -48,10 +48,7 @@ export const getAllProjects = async (query) => {
 
 	result = result.skip(skip).limit(limit);
 
-	const projects = await result.populate({
-		path: "files",
-		select: "-text",
-	});
+	const projects = await result.populate("-files");
 	return projects;
 };
 
