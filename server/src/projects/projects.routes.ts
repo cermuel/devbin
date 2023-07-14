@@ -12,18 +12,22 @@ router.route("/").post(async (req: Request<object, object, IProject>, res: Respo
 	const { name, files } = req.body;
 
 	const project = await createProject(name, files, req.user);
-	res.status(StatusCodes.CREATED).json({ msg:"Project created Sucessfully", data: {project}, statusCode: StatusCodes.CREATED });
-}).get(async (req: Request, res: Response<APIResponse<{projects: IProject[]}>>) => {
-	const projects = await getAllProjects(req.query);
-	res.status(StatusCodes.OK).
-		json({ msg:"Projects fetched Sucessfully", data: {projects}, statusCode:StatusCodes.OK });
-});
+	res.status(StatusCodes.CREATED).json({ msg:"Project created Sucessfully", 
+		data: {project}, statusCode: StatusCodes.CREATED });
+})
+	.get(async (req: Request, res: Response<APIResponse<{projects: IProject[]}>>) => {
+		const projects = await getAllProjects(req.query);
+		res.status(StatusCodes.OK).
+			json({ msg:"Projects fetched Sucessfully", 
+				data: {projects}, statusCode:StatusCodes.OK });
+	});
 
 router.get("/my", async (req: Request, res: Response<APIResponse<{projects: IProject[]}>>) => {
 	req.query.owner = req.user._id;
 	const projects = await getMyProjects(req.query);
 	res.status(StatusCodes.OK).
-		json({ msg:"Projects fetched Sucessfully", data: {projects}, statusCode:StatusCodes.OK });
+		json({ msg:"Projects fetched Sucessfully", 
+			data: {projects}, statusCode:StatusCodes.OK });
 
 });
 
