@@ -8,3 +8,16 @@ export interface APIResponse<Data = any> {
     data?: Data;
     statusCode: StatusCodes;
 }
+
+export interface APIParams {
+    id?: string;
+}
+
+export interface APIQuery {
+    search?: string;
+    sort?: string;
+    limit?: string | number;
+    skip?: string | number;
+    page?: string | number;
+    owner?: string;
+}

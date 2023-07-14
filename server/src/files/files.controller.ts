@@ -26,3 +26,11 @@ const validateFile = (file: IFile) => {
 	return "valid";
 };
 
+
+export const updateFile = async (id: string, file: IFile) => {
+	validateFile(file);
+	const updatedFile = await Files.findByIdAndUpdate(id, file, {
+		new: true,
+	});
+	return updatedFile;
+};
