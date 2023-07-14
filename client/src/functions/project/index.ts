@@ -1,0 +1,106 @@
+import { toast } from "react-hot-toast";
+import axios from "axios";
+import { projectType } from "../../types/functions/project";
+import { Dispatch } from "react";
+import { NavigateFunction } from "react-router-dom";
+
+const BASEURL = process.env.REACT_APP_BASE_URL;
+const TOKEN = localStorage.getItem("devbin_token");
+
+export const createProject = async ({
+  project,
+  setsaveLoading,
+  navigate,
+}: {
+  project: projectType;
+  setsaveLoading: Dispatch<boolean>;
+  navigate: NavigateFunction;
+}) => {
+  setsaveLoading(true);
+
+  if (project.name.length > 3) {
+    try {
+      let createdProject = await axios.post(`${BASEURL}projects`, project, {
+        headers: { Authorization: `${TOKEN}` },
+      });
+      setsaveLoading(false);
+      toast.success("Project created successfully");
+
+      localStorage.setItem(
+        "devbin_activecode",
+        createdProject.data.data.project._id
+      );
+      setTimeout(() => {
+        navigate("/code/bin");
+        window.location.reload();
+      }, 2000);
+    } catch (err: any) {
+      setsaveLoading(false);
+      console.log(err);
+      let message =
+        err?.response.data?.msg || err?.message || `An error occurred`;
+      toast.error(message);
+    }
+  } else {
+    toast.error("Project name must be minimum 4 characters");
+    setsaveLoading(false);
+  }
+};
+
+export const getProject = async ({
+  id,
+  setCSS,
+  setHTML,
+  setJS,
+  setLoading,
+}: {
+  id: string;
+  setHTML: Dispatch<string>;
+  setCSS: Dispatch<string>;
+  setJS: Dispatch<string>;
+  setLoading: Dispatch<boolean>;
+}) => {
+  setLoading(true);
+  try {
+    let project: any = await axios.get(`${BASEURL}projects/${id}`, {
+      headers: { Authorization: `${TOKEN}` },
+    });
+    project = project.data.data.project;
+    let HTML = project.files[0].text;
+    let CSS = project.files[1].text;
+    let JS = project.files[2].text;
+    setHTML(HTML);
+    setCSS(CSS);
+    setJS(JS);
+    setLoading(false);
+  } catch (err: any) {
+    setLoading(false);
+    console.log(err);
+    let message =
+      err?.response.data?.msg || err?.message || `An error occurred`;
+    toast.error(message);
+  }
+};
+
+export const getMyProjects = async ({
+  setLoading,
+  setProjects,
+}: {
+  setLoading: Dispatch<any>;
+  setProjects: Dispatch<any[]>;
+}) => {
+  setLoading(true);
+  try {
+    let project = await axios.get(`${BASEURL}projects/my`, {
+      headers: { Authorization: `${TOKEN}` },
+    });
+    setProjects(project.data.data.projects);
+    setLoading(false);
+  } catch (err: any) {
+    setLoading(false);
+    console.log(err);
+    let message =
+      err?.response.data?.msg || err?.message || `An error occurred`;
+    toast.error(message);
+  }
+};

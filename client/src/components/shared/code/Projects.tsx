@@ -3,15 +3,15 @@ import { FiMaximize2 } from "react-icons/fi";
 //@ts-ignore
 import userIMG from "./../../../assets/main.jpeg";
 
-const Projects = () => {
-  let html = "<h1 id='welcome'>Hello world!</h1>";
-  let css = `h1{
-    color: red
-}
-body{
-    background-color: #737cde;
-}`;
-  let js = "const welcome = document.getElementById('welcome');";
+const Projects = ({
+  html,
+  css,
+  js,
+}: {
+  html: string;
+  css: string;
+  js: string;
+}) => {
   let srcDoc = `
       <html>
         <head>
@@ -25,7 +25,7 @@ body{
     `;
   return (
     <div className="sm:w-[400px] flex flex-col rounded-md p-4 h-80 w-full relative bg-gray-700 m-4 transition-all hover:scale-110">
-      <button className="absolute z-50 text-white p-1 bg-gray-400 text-lg opacity-80 top-2 right-2">
+      <button className="absolute z-40 text-white p-1 bg-gray-400 text-lg opacity-80 top-2 right-2">
         <FiMaximize2 />
       </button>
       <iframe

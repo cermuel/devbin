@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Entry from "./pages/Entry";
+import CreateProject from "./pages/CreateProject";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <CodeSettingsContext>
           <Routes>
             <Route path="/code/bin" element={<Code />} />
+            <Route path="/code/bin/new" element={<CreateProject />} />
             <Route path="/code/home" element={<Home />} />
             <Route path="/code/profile" element={<Profile />} />
           </Routes>

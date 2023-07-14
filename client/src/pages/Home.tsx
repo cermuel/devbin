@@ -15,9 +15,9 @@ const Home = () => {
     <main className="bg-gray-800 w-screen h-screen">
       <NavTwo />
       <section className="flex-grow max-h-[92%] gap-8 flex flex-wrap w-full justify-around p-4 px-6 overflow-scroll">
-        {arr.map((arr: number) => (
+        {/* {arr.map((arr: number) => (
           <Projects key={arr} />
-        ))}
+        ))} */}
       </section>
     </main>
   );

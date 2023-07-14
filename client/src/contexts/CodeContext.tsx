@@ -4,6 +4,7 @@ import { CodeContType } from "../types/context";
 const localStorageValueHTML = localStorage.getItem("HTML");
 const localStorageValueCSS = localStorage.getItem("CSS");
 const localStorageValueJS = localStorage.getItem("JS");
+const localStorageID = localStorage.getItem("devbin_activecode");
 
 export const CodeCont = React.createContext<CodeContType>({
   HTML: localStorageValueHTML
@@ -23,6 +24,8 @@ body{
     ? localStorageValueJS
     : "const welcome = document.getElementById('welcome');",
   setJS: () => {},
+  activeID: localStorageID ? localStorageID : "",
+  setactiveID: () => {},
 });
 
 const CodeContext = ({ children }: { children: React.ReactNode }) => {
@@ -47,8 +50,13 @@ const CodeContext = ({ children }: { children: React.ReactNode }) => {
       ? localStorageValueJS
       : "const welcome = document.getElementById('welcome');";
   });
+  const [activeID, setactiveID] = useState<string>(() => {
+    return localStorageID ? localStorageID : "";
+  });
   return (
-    <CodeCont.Provider value={{ HTML, setHTML, CSS, setCSS, JS, setJS }}>
+    <CodeCont.Provider
+      value={{ HTML, setHTML, CSS, setCSS, JS, setJS, activeID, setactiveID }}
+    >
       {children}
     </CodeCont.Provider>
   );

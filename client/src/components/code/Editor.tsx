@@ -24,7 +24,7 @@ const CodeEditor = ({
   };
   return (
     <div
-      className={`md:min-w-[100px] w-full flex-grow ${
+      className={`md:min-w-[100px] w-full z-0 flex-grow ${
         showMinScreen !== file.name && "max-md:hidden"
       }`}
     >
@@ -65,6 +65,7 @@ const CodeEditor = ({
             vertical: "hidden",
             horizontal: "hidden",
           },
+
           padding: {
             top: 10,
           },

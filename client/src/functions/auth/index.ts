@@ -55,7 +55,7 @@ export const login = async (details: logintype, navigate: any) => {
         toast.success(message);
         localStorage.setItem("devbin_token", loggedUser.data.token);
         setTimeout(() => {
-          navigate("/code/bin");
+          navigate("/code/home");
         }, 3000);
       } catch (err: any) {
         let message =

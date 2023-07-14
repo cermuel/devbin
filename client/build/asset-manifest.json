@@ -1,13 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.2a604efb.css",
-    "main.js": "/static/js/main.52771741.js",
+    "main.css": "/static/css/main.5b96fe31.css",
+    "main.js": "/static/js/main.565f2324.js",
+    "static/media/authleft.gif": "/static/media/authleft.ed622e2e4217e56dbdee.gif",
+    "static/media/longlogo.png": "/static/media/longlogo.f434be6f2f17e395e7f6.png",
+    "static/media/main.png": "/static/media/main.daf345f3a8f802d6b1bc.png",
     "index.html": "/index.html",
-    "main.2a604efb.css.map": "/static/css/main.2a604efb.css.map",
-    "main.52771741.js.map": "/static/js/main.52771741.js.map"
+    "main.5b96fe31.css.map": "/static/css/main.5b96fe31.css.map",
+    "main.565f2324.js.map": "/static/js/main.565f2324.js.map"
   },
   "entrypoints": [
-    "static/css/main.2a604efb.css",
-    "static/js/main.52771741.js"
+    "static/css/main.5b96fe31.css",
+    "static/js/main.565f2324.js"
   ]
 }

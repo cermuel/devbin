@@ -8,6 +8,9 @@ import { CodeCont } from "../../../contexts/CodeContext";
 import { CodeSettingsCont } from "../../../contexts/CodeSettingsContext";
 import { downloadCodeAsZip } from "../../../config/CodeLogic";
 import { Toaster } from "react-hot-toast";
+import { filesTypeType, projectType } from "../../../types/functions/project";
+import { createProject } from "../../../functions/project";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const Navbar = ({
   setShowMinScreen,
@@ -22,6 +25,7 @@ const Navbar = ({
   const { codeName, setCodeName } = useContext(CodeSettingsCont);
   const [showSettings, setshowSettings] = useState<boolean>(false);
   const [showDropDown, setshowDropDown] = useState<boolean>(false);
+  const [saveLoading, setsaveLoading] = useState<boolean>(false);
   return (
     <>
       {showSettings && <Settings setshowSettings={setshowSettings} />}
@@ -37,15 +41,15 @@ const Navbar = ({
           />
         </div>
         <div className="gap-3 border-b-[#1e1e1e] bg-[#101010] flex items-center">
-          <button
-            className="bg-pry h-full px-2 gap-2 flex text-white justify-center rounded-sm items-center"
-            onClick={() => {
-              // setshowSettings(true);
-              alert("Save function not ready yet");
-            }}
-          >
-            <span className="max-md:hidden">Save</span>
-            <RiSave2Fill className="text-xl" />
+          <button className="bg-pry h-full px-2 gap-2 flex text-white justify-center rounded-sm items-center">
+            {saveLoading ? (
+              <AiOutlineLoading className="animate-spin" />
+            ) : (
+              <>
+                <span className="max-md:hidden">Save</span>
+                <RiSave2Fill className="text-xl" />
+              </>
+            )}
           </button>
           <button
             className="bg-pry h-full gap-2 px-2 text-white flex justify-center rounded-sm items-center"

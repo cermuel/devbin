@@ -7,6 +7,8 @@ export type CodeContType = {
   setHTML: Dispatch<any>;
   setCSS: Dispatch<any>;
   setJS: Dispatch<any>;
+  activeID: string;
+  setactiveID: Dispatch<string>;
 };
 
 export type CodeSettingsType = {
