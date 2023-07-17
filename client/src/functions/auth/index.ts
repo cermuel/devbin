@@ -55,8 +55,8 @@ export const login = async (details: logintype, navigate: any) => {
         toast.success(message);
         localStorage.setItem("devbin_token", loggedUser.data.token);
         setTimeout(() => {
-          window.location.reload();
           navigate("/code/home");
+          window.location.reload();
         }, 3000);
       } catch (err: any) {
         let message =
