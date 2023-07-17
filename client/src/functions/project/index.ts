@@ -97,7 +97,7 @@ export const getMyProjects = async ({
     let project = await axios.get(`${BASEURL}projects/my`, {
       headers: { Authorization: `${TOKEN}` },
     });
-    setProjects(project.data.data.projects);
+    setProjects(project?.data?.data?.projects);
     setLoading(false);
   } catch (err: any) {
     setLoading(false);
@@ -120,7 +120,7 @@ export const getAllProjects = async ({
     let project = await axios.get(`${BASEURL}projects`, {
       headers: { Authorization: `${TOKEN}` },
     });
-    setProjects(project.data.data.projects);
+    setProjects(project?.data?.data?.projects);
     setLoading(false);
   } catch (err: any) {
     setLoading(false);

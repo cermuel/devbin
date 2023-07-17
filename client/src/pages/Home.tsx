@@ -22,15 +22,15 @@ const Home = () => {
 
       <NavTwo />
       <section className="flex-grow max-h-[92%] gap-8 flex flex-wrap w-full justify-around p-4 px-6 overflow-scroll">
-        {projects && projects.length > 0 ? (
+        {projects && projects?.length > 0 ? (
           projects?.map((project: any, i: number) => {
             return (
               <Projects
-                html={project.files[0].text}
-                css={project.files[1].text}
-                js={project.files[2].text}
+                html={project?.files[0].text}
+                css={project?.files[1].text}
+                js={project?.files[2].text}
                 key={i}
-                projectName={project.name}
+                projectName={project?.name}
                 id={project._id}
               />
             );
