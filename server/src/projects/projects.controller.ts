@@ -1,6 +1,7 @@
 import { APIQuery } from "../types";
 import { createFiles } from "../files/files.controller";
 import { Projects } from "./projects.model";
+import { NotFoundError } from "src/errors/not-found.error";
 
 export const createProject = async (name: string, files: unknown[], user) => {
 	const createdFiles = await createFiles(files);
@@ -59,4 +60,17 @@ export const getAllProjects = async (query: APIQuery) => {
 export const getSingleProject = async (id: string) => {
 	const project = await Projects.findById(id).populate("files");
 	return project;
+};
+
+export const inviteCollaboration = async (id: string, userId) => {
+	const project = await Projects.findById(id);
+
+
+	if (!project)  throw new NotFoundError("Project not found");
+
+
+	if (project.collaborators.includes(userId)) return true;
+	project.collaborators.push(userId);
+	await project.save();
+	return true;
 };

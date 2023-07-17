@@ -3,7 +3,7 @@ import { Router, Request, Response } from "express";
 const router = Router();
 
 
-import { createProject, getAllProjects, getMyProjects, getSingleProject } from "./projects.controller";
+import { createProject, getAllProjects, getMyProjects, getSingleProject, inviteCollaboration } from "./projects.controller";
 import { APIResponse, APIParams, APIQuery } from "../types";
 import { IProject } from "./projects.dto";
 import { StatusCodes } from "http-status-codes";
@@ -48,5 +48,13 @@ router.route("/:id").get(async (req: Request<APIParams, object, Record<string, n
 			.json({ msg:"Project updated Sucessfully", data: {project}, statusCode:StatusCodes.OK });
 	});
 
+router.post("/:id/collab", async (req: Request<APIParams, object, Record<string, never>, APIQuery>, 
+	res: Response<APIResponse<{project: IProject}>>) => {
+	const result = await inviteCollaboration(req.params.id, req.body.userId);
+	if (result) {
+		return res.status(StatusCodes.OK).json({ msg:"Collaboration invite sent", statusCode:StatusCodes.OK });
+	}
+	return res.status(StatusCodes.BAD_REQUEST).json({ msg:"Collaboration invite failed", statusCode:StatusCodes.BAD_REQUEST });
+});
 
 export default router;
