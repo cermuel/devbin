@@ -1,7 +1,7 @@
 import { APIQuery } from "../types";
 import { createFiles } from "../files/files.controller";
 import { Projects } from "./projects.model";
-import { NotFoundError } from "src/errors/not-found.error";
+import { NotFoundError } from "../errors/not-found.error";
 
 export const createProject = async (name: string, files: unknown[], user) => {
 	const createdFiles = await createFiles(files);
