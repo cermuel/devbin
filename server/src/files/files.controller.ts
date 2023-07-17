@@ -34,3 +34,10 @@ export const updateFile = async (id: string, file: IFile) => {
 	});
 	return updatedFile;
 };
+
+export const updateFileContent = async (id: string, content: string) => {
+	const updatedFile = await Files.findByIdAndUpdate(id, {content}, {
+		new: true,
+	});
+	return updatedFile;
+};

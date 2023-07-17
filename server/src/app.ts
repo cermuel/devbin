@@ -8,7 +8,7 @@ require("dotenv").config();
 const app: Application = express();
 
 const http = createServer(app);
-const io = new Server(http);
+const io = new Server(http, {cors: {origin: "*"}});
 
 import authRoutes from "./auth/auth.routes";
 import userRoutes from "./users/user.routes";
@@ -17,6 +17,7 @@ import { errorHandlerMiddleware } from "./middlewares/error.middleware";
 import { notFound } from "./middlewares/not-found.middleware";
 import { authenticateUser } from "./middlewares/auth";
 import cors from "cors";
+import socket from "./socket";
 
 app.use(cors<Request>());
 app.use(express.json());
@@ -28,12 +29,7 @@ app.get("/", (req: Request, res: Response) => {
 	res.send("Hello world!");
 });
 
-io.on<"connection">("connection", (socket) => {
-	socket.on("message", (message) => {
-		console.log(message);
-
-	});
-});
+socket(io);
 
 app.use(notFound);
 app.use(errorHandlerMiddleware);

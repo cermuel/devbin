@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import type { Socket } from "socket.io";
 
 export { Response, Request, NextFunction } from "express";
 
@@ -21,3 +22,10 @@ export interface APIQuery {
     page?: string | number;
     owner?: string;
 }
+
+export interface MySocket extends Socket {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    user: any;
+    sessionId: string;
+    userId: string;
+  }
