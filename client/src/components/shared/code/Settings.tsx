@@ -18,8 +18,10 @@ const Settings = ({
           onChange={(e: any) => setTheme(e.target.value)}
           id=""
         >
-          {monacoEditorThemes.map((theme: string) => (
-            <option value={theme}>{theme}</option>
+          {monacoEditorThemes.map((theme: string, key: number) => (
+            <option key={key} value={theme}>
+              {theme}
+            </option>
           ))}
         </select>
       </section>
@@ -31,8 +33,10 @@ const Settings = ({
           onChange={(e: any) => setfontSize(e.target.value)}
           id=""
         >
-          {FontSizes.map((font: number) => (
-            <option value={font}>{font}</option>
+          {FontSizes.map((font: number, key: number) => (
+            <option value={font} key={key}>
+              {font}
+            </option>
           ))}
         </select>
       </section>

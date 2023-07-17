@@ -9,7 +9,7 @@ import { CodeSettingsCont } from "../../../contexts/CodeSettingsContext";
 import { downloadCodeAsZip } from "../../../config/CodeLogic";
 import { Toaster } from "react-hot-toast";
 import { filesTypeType, projectType } from "../../../types/functions/project";
-import { createProject } from "../../../functions/project";
+import { createProject, updateProject } from "../../../functions/project";
 import { AiOutlineLoading } from "react-icons/ai";
 
 const Navbar = ({
@@ -21,7 +21,7 @@ const Navbar = ({
   toShow: string[];
   showMinScreen: string;
 }) => {
-  const { HTML, CSS, JS } = useContext(CodeCont);
+  const { HTML, CSS, JS, activeID } = useContext(CodeCont);
   const { codeName, setCodeName } = useContext(CodeSettingsCont);
   const [showSettings, setshowSettings] = useState<boolean>(false);
   const [showDropDown, setshowDropDown] = useState<boolean>(false);
@@ -32,16 +32,25 @@ const Navbar = ({
       {showDropDown && <Dropdown setshowSettings={setshowSettings} />}
       <nav className="h-[7vh] p-2 w-full border-b-[1px] gap-3 border-b-[#1e1e1e] bg-[#101010] flex justify-between">
         <Toaster />
-        <div className="px-2 h-full pt-1">
+        <div className="px-2 h-full pt-1 flex-grow max-sm:pt-3">
           <input
             type="text"
             value={codeName}
             onChange={(e: any) => setCodeName(e.target.value)}
-            className="text-pry md:text-xl outline-none bg-transparent font-semibold"
+            className="text-pry md:text-xl outline-none bg-transparent w-full font-semibold"
           />
         </div>
         <div className="gap-3 border-b-[#1e1e1e] bg-[#101010] flex items-center">
-          <button className="bg-pry h-full px-2 gap-2 flex text-white justify-center rounded-sm items-center">
+          <button
+            onClick={() =>
+              updateProject({
+                id: activeID,
+                codeName,
+                setLoading: setsaveLoading,
+              })
+            }
+            className="bg-pry h-full px-2 gap-2 flex text-white justify-center rounded-sm items-center"
+          >
             {saveLoading ? (
               <AiOutlineLoading className="animate-spin" />
             ) : (
@@ -74,10 +83,11 @@ const Navbar = ({
         </div>
       </nav>
       <div className="md:hidden flex gap-2 h-[4vh] bg-[#101010]">
-        {toShow.map((t: string) => {
+        {toShow.map((t: string, i: number) => {
           const active = showMinScreen == t;
           return (
             <button
+              key={i}
               onClick={() => setShowMinScreen(t)}
               className={`${
                 active ? "bg-gray-700" : "bg-gray-800"

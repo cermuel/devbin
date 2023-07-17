@@ -25,7 +25,6 @@ const HTMLRenderer: React.FC<HTMLRendererProps> = ({ html, css, js }) => {
   // }, []);
 
   useEffect(() => {
-    console.log("");
     const timeout = setTimeout(() => {
       setsrcDoc(`
       <html>
@@ -47,7 +46,7 @@ const HTMLRenderer: React.FC<HTMLRendererProps> = ({ html, css, js }) => {
       ref={iframe}
       srcDoc={srcDoc}
       title="Output"
-      sandbox="allow-scripts allow-same-origin allow-top-navigation allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-encrypted-media allow-credentials allow-downloads-without-user-activation"
+      sandbox="allow-scripts allow-top-navigation allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-orientation-lock allow-pointer-lock allow-presentation"
       width="100%"
       height="100%"
     />

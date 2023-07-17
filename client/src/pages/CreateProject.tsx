@@ -25,8 +25,17 @@ body{
   return (
     <>
       <NavTwo show={"true"} />
-      <main className="w-screen h-screen px-8 bg-gray-700 flex justify-center items-center">
+      <main className="w-screen h-screen px-8 gap-12 flex-col bg-gray-700 flex justify-center items-center">
         <Toaster />
+        <h1 className="w-full text-center text-4xl sm:text-5xl font-extrabold">
+          <span
+            className="
+          text-white"
+          >
+            CREATE
+          </span>{" "}
+          <span className="text-pry">PROJECT</span>
+        </h1>
         <div className="flex relative flex-col gap-4 sm:w-[500px] w-full">
           <label
             className={`${

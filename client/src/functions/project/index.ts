@@ -53,12 +53,14 @@ export const getProject = async ({
   setHTML,
   setJS,
   setLoading,
+  setCodeName,
 }: {
   id: string;
   setHTML: Dispatch<string>;
   setCSS: Dispatch<string>;
   setJS: Dispatch<string>;
   setLoading: Dispatch<boolean>;
+  setCodeName: Dispatch<string>;
 }) => {
   setLoading(true);
   try {
@@ -66,18 +68,19 @@ export const getProject = async ({
       headers: { Authorization: `${TOKEN}` },
     });
     project = project.data.data.project;
-    let HTML = project.files[0].text;
-    let CSS = project.files[1].text;
-    let JS = project.files[2].text;
+    let HTML = project?.files[0]?.text;
+    let CSS = project?.files[1]?.text;
+    let JS = project?.files[2]?.text;
     setHTML(HTML);
     setCSS(CSS);
     setJS(JS);
+    setCodeName(project.name);
     setLoading(false);
   } catch (err: any) {
     setLoading(false);
     console.log(err);
     let message =
-      err?.response.data?.msg || err?.message || `An error occurred`;
+      err?.response?.data?.msg || err?.message || `An error occurred`;
     toast.error(message);
   }
 };
@@ -102,5 +105,60 @@ export const getMyProjects = async ({
     let message =
       err?.response.data?.msg || err?.message || `An error occurred`;
     toast.error(message);
+  }
+};
+
+export const getAllProjects = async ({
+  setLoading,
+  setProjects,
+}: {
+  setLoading: Dispatch<any>;
+  setProjects: Dispatch<any[]>;
+}) => {
+  setLoading(true);
+  try {
+    let project = await axios.get(`${BASEURL}projects`, {
+      headers: { Authorization: `${TOKEN}` },
+    });
+    setProjects(project.data.data.projects);
+    setLoading(false);
+  } catch (err: any) {
+    setLoading(false);
+    console.log(err);
+    let message =
+      err?.response.data?.msg || err?.message || `An error occurred`;
+    toast.error(message);
+  }
+};
+
+export const updateProject = async ({
+  id,
+  setLoading,
+  codeName,
+}: {
+  id: string;
+  codeName: string;
+  setLoading: Dispatch<boolean>;
+}) => {
+  if (codeName.length > 3) {
+    try {
+      let updatedProject = await axios.patch(
+        `${BASEURL}projects/${id}`,
+        { name: codeName },
+        {
+          headers: { Authorization: `${TOKEN}` },
+        }
+      );
+      toast.success(updatedProject.data.msg);
+      setLoading(false);
+    } catch (err: any) {
+      setLoading(false);
+      console.log(err);
+      let message =
+        err?.response.data?.msg || err?.message || `An error occurred`;
+      toast.error(message);
+    }
+  } else {
+    toast.error(`Name must be atleast 4 letters`);
   }
 };

@@ -1,17 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FiMaximize2 } from "react-icons/fi";
 //@ts-ignore
 import userIMG from "./../../../assets/main.jpeg";
+import { CodeCont } from "../../../contexts/CodeContext";
+import { useNavigate } from "react-router-dom";
+import { selectProject } from "../../../utils/ProjectUtils";
 
 const Projects = ({
   html,
   css,
   js,
+  projectName,
+  id,
 }: {
   html: string;
   css: string;
   js: string;
+  projectName: string;
+  id: string;
 }) => {
+  const { setactiveID } = React.useContext(CodeCont);
+  const navigate = useNavigate();
+
   let srcDoc = `
       <html>
         <head>
@@ -23,27 +33,34 @@ const Projects = ({
         </body>
       </html>
     `;
+
   return (
-    <div className="sm:w-[400px] flex flex-col rounded-md p-4 h-80 w-full relative bg-gray-700 m-4 transition-all hover:scale-110">
-      <button className="absolute z-40 text-white p-1 bg-gray-400 text-lg opacity-80 top-2 right-2">
-        <FiMaximize2 />
-      </button>
-      <iframe
-        srcDoc={srcDoc}
-        title="Output"
-        sandbox="allow-scripts allow-same-origin allow-top-navigation allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-encrypted-media allow-credentials allow-downloads-without-user-activation"
-        width="100%"
-        height="80%"
-        className="hover:absolute rounded-sm top-[-15px] left-[-15px]"
-      />
-      <div className="flex absolute bottom-4 mt-4 gap-2 items-center h-10 flex-grow">
-        <img src={userIMG} className="h-9 rounded-sm" alt="" />
-        <div className="h-[80%] flex flex-col justify-center gap-1">
-          <p className="font-semibold text-white leading-3">Demo User</p>
-          <span className="text-sm text-gray-200 leading-3">
-            demouser@mail.com
-          </span>
-        </div>
+    <div className="sm:w-[400px] flex flex-col h-64 sm:h-72 w-full relative m-4">
+      <div className="absolute w-full opacity-0 hover:opacity-80 flex flex-col justify-center items-center gap-2 rounded-md bg-white h-[80%]">
+        <button
+          onClick={() => selectProject({ id, setactiveID, navigate })}
+          className="w-28 rounded-3xl h-8 flex justify-center items-center bg-pry text-sm text-white"
+        >
+          SELECT
+        </button>
+        <button className="w-28 rounded-3xl h-8 flex justify-center items-center border-pry border-2 text-sm text-pry">
+          USER
+        </button>
+      </div>
+      <div className="hover:opacity-20 w-full h-[80%]">
+        <iframe
+          srcDoc={srcDoc}
+          title="Output"
+          sandbox="allow-scripts allow-same-origin allow-top-navigation allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-encrypted-media allow-credentials allow-downloads-without-user-activation"
+          width="100%"
+          height="100%"
+          className="rounded-md"
+        />
+      </div>
+      <div>
+        <p className="text-white uppercase mt-2 text-xs font-medium">
+          {projectName}
+        </p>
       </div>
     </div>
   );

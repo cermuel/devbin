@@ -21,9 +21,8 @@ const Profile = () => {
     getUser({ setLoading: setUserLoading, setUser });
     getMyProjects({ setLoading: setProjectsLoading, setProjects });
   }, []);
-  console.log(projects);
   return (
-    <main className="w-screen h-screen bg-gray-700">
+    <main className="w-screen h-screen overflow-hidden bg-gray-700">
       {(userLoading || projectsLoading) && <Loading />}
       <NavTwo />
       <section className="h-[30%] relative sm:justify-center flex gap-2 items-center px-4 max-sm:h-[15%] w-full bg-gray-600">
@@ -39,24 +38,42 @@ const Profile = () => {
           <p className="text-gray-200 sm:text-xl">{user?.email}</p>
         </div>
       </section>
-      <section className="h-[68%] relative w-full bg-gray-700 p-4 max-sm:h-[75%]">
-        <h1 className="sm:text-5xl sm:pt-10 text-3xl font-bold text-white">
+      <section className="h-[68%] relative w-full bg-gray-700 sm:pb-14 p-4 max-sm:h-[75%]">
+        <h1 className="sm:text-5xl mb-4 sm:pt-10 text-3xl font-bold text-white">
           My Projects
         </h1>
-        <section className="flex-grow max-h-[92%] gap-8 flex flex-wrap w-full justify-around p-4 px-6 overflow-scroll">
-          {projects &&
-            projects.length > 0 &&
+        <section className="flex-grow max-h-[92%] gap-6 flex flex-wrap w-full justify-around p-4 px-6 overflow-scroll">
+          {projects && projects.length > 0 ? (
             projects?.map((project: any, i: number) => {
               return (
-                // <Projects
-                //   html={project.files[0]}
-                //   css={project.files[1]}
-                //   js={project.files[2]}
-                //   key={i}
-                // />
-                <div></div>
+                <Projects
+                  html={project.files[0].text}
+                  css={project.files[1].text}
+                  js={project.files[2].text}
+                  key={i}
+                  projectName={project.name}
+                  id={project._id}
+                />
               );
-            })}
+            })
+          ) : (
+            <div className="w-full h-full flex-col flex justify-center items-center">
+              <p className="text-2xl font-bold mb-1 text-white">
+                {" "}
+                You have 0 projects
+              </p>
+              <div className="flex flex-wrap gap-4 justify-center">
+                <button
+                  onClick={() => {
+                    navigate("/code/bin/new");
+                  }}
+                  className="bg-pry text-white rounded-sm py-2 px-6"
+                >
+                  Create One
+                </button>
+              </div>
+            </div>
+          )}
         </section>
       </section>
     </main>

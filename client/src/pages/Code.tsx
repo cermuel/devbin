@@ -11,12 +11,23 @@ import { getProject } from "../functions/project";
 
 const Code = () => {
   const navigate = useNavigate();
-  let activeID = "";
-  const { HTML, CSS, JS, setHTML, setCSS, setJS } = useContext(CodeCont);
+  const { HTML, CSS, JS, setHTML, setCSS, setJS, activeID } =
+    useContext(CodeCont);
+
+  const { setCodeName, codeName } = useContext(CodeSettingsCont);
+  let savedID = localStorage.getItem("devbin_activecode");
+  console.log({ codeName, activeID, savedID });
   useLayoutEffect(() => {
     isAuth(navigate);
     activeID !== "" &&
-      getProject({ id: activeID, setHTML, setCSS, setJS, setLoading });
+      getProject({
+        id: activeID,
+        setHTML,
+        setCSS,
+        setJS,
+        setLoading,
+        setCodeName,
+      });
   }, []);
   const { theme, fontSize, editorNotMounted } = useContext(CodeSettingsCont);
 
@@ -53,7 +64,6 @@ const Code = () => {
       setValue: setJS,
     },
   ];
-
   if (activeID && activeID !== "") {
     return (
       <CodeLayout
@@ -61,16 +71,17 @@ const Code = () => {
         setShowMinScreen={setshowMinScreen}
         showMinScreen={showMinScreen}
       >
-        {(editorNotMounted || loading) && <Loading />}
+        {editorNotMounted && <Loading />}
         <>
           <section
             className={`w-screend flex gap-1 bg-pry overflow-hidden h-[50%] ${
               showMinScreen === toShow[3] && "max-md:hidden"
             }`}
           >
-            {editors.map((file: any) => {
+            {editors.map((file: any, i: number) => {
               return (
                 <CodeEditor
+                  key={i}
                   showMinScreen={showMinScreen}
                   toShow={toShow}
                   file={file}
@@ -90,6 +101,8 @@ const Code = () => {
         </>
       </CodeLayout>
     );
+  } else if (loading) {
+    return <Loading />;
   } else {
     return (
       <CodeLayout

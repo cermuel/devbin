@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CodeContType } from "../types/context";
 
 const localStorageValueHTML = localStorage.getItem("HTML");
@@ -53,6 +53,9 @@ const CodeContext = ({ children }: { children: React.ReactNode }) => {
   const [activeID, setactiveID] = useState<string>(() => {
     return localStorageID ? localStorageID : "";
   });
+  useEffect(() => {
+    localStorage.setItem("devbin_activecode", activeID);
+  }, [activeID]);
   return (
     <CodeCont.Provider
       value={{ HTML, setHTML, CSS, setCSS, JS, setJS, activeID, setactiveID }}
