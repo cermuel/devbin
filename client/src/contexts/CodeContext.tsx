@@ -6,11 +6,12 @@ const localStorageValueHTML = localStorage.getItem("HTML");
 const localStorageValueCSS = localStorage.getItem("CSS");
 const localStorageValueJS = localStorage.getItem("JS");
 const localStorageID = localStorage.getItem("devbin_activecode");
+const token = localStorage.getItem("devbin_token");
 
 let socket = io("http://localhost:5000", {
   // reconnectionDelayMax: 10000,
   auth: {
-    token: localStorageID,
+    token: token,
   },
 });
 
