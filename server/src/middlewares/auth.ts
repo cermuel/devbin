@@ -27,8 +27,7 @@ export const authenticateUser = async (
 };
 
 export const authenticateUserSocket = async (socket: MySocket, next: { (err?): void }) => {
-	const sessionId = socket.handshake.headers.sessionid;
-	console.log("socket.handshake.headers", socket.handshake.headers);
+	const sessionId = socket.handshake.auth.sessionid || socket.handshake.headers.sessionid;
 	console.log("sessionId", sessionId);
 	if (sessionId) {
 		// find existing session
@@ -41,7 +40,7 @@ export const authenticateUserSocket = async (socket: MySocket, next: { (err?): v
 		}
 	}
 
-	const token = socket.handshake.headers.token;
+	const token = socket.handshake.auth.token ||socket.handshake.headers.token;
 	if (token) {
 		const payload = isTokenValid(token as string);
 		const user = await Users.findById(payload.sub).select("-password");
