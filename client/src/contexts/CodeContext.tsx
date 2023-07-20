@@ -2,12 +2,17 @@ import React, { useEffect, useState } from "react";
 import { CodeContType } from "../types/context";
 import io from "socket.io-client";
 
-let socket = io("http://localhost:5000");
-
 const localStorageValueHTML = localStorage.getItem("HTML");
 const localStorageValueCSS = localStorage.getItem("CSS");
 const localStorageValueJS = localStorage.getItem("JS");
 const localStorageID = localStorage.getItem("devbin_activecode");
+
+let socket = io("http://localhost:5000", {
+  // reconnectionDelayMax: 10000,
+  auth: {
+    token: localStorageID,
+  },
+});
 
 export const CodeCont = React.createContext<CodeContType>({
   HTML: localStorageValueHTML
