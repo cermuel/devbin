@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 //@ts-ignore
 import gif from "../assets/authleft.gif";
 //@ts-ignore
@@ -9,6 +9,7 @@ import Header from "../components/shared/auth/Header";
 import { signuptype } from "../types/functions/auth";
 import { signup } from "../functions/auth";
 import { Toaster } from "react-hot-toast";
+import { isAuthLogin } from "../utils/ChatUtils";
 
 const Signup = () => {
   const [details, setdetails] = useState<signuptype>({
@@ -18,7 +19,9 @@ const Signup = () => {
     lastName: "",
   });
   const navigate = useNavigate();
-
+  useLayoutEffect(() => {
+    isAuthLogin(navigate);
+  }, []);
   return (
     <main className="w-screen bg-gray-800 h-screen flex flex-row-reverse items-center">
       <Toaster />

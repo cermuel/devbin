@@ -1,26 +1,34 @@
-import React, { useLayoutEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import NavTwo from "../components/shared/code/NavTwo";
-import { getMe } from "../functions/user";
-import { isAuth } from "../utils/ChatUtils";
+import React from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getSingleUser } from "../functions/user";
 //@ts-ignore
 import userIMG from "../assets/main.jpeg";
-import { getMyProjects } from "../functions/project";
-import Projects from "../components/shared/code/Projects";
+import { isAuth } from "../utils/ChatUtils";
 import Loading from "../components/shared/code/Loading";
+import NavTwo from "../components/shared/code/NavTwo";
+import Projects from "../components/shared/code/Projects";
+import { getAllProjects } from "../functions/project";
 
-const Profile = () => {
+const User = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const [userLoading, setUserLoading] = useState<boolean>(false);
-  const [projectsLoading, setProjectsLoading] = useState<boolean>(false);
-  const [user, setUser] = useState<any>();
-  const [projects, setProjects] = useState<any[]>([]);
-  useLayoutEffect(() => {
-    isAuth(navigate);
+  const [userLoading, setUserLoading] = React.useState<boolean>(false);
+  const [projectsLoading, setProjectsLoading] = React.useState<boolean>(false);
+  const [user, setUser] = React.useState<any>();
+  const [projects, setProjects] = React.useState<any[]>([]);
 
-    getMe({ setLoading: setUserLoading, setUser });
-    getMyProjects({ setLoading: setProjectsLoading, setProjects });
+  React.useLayoutEffect(() => {
+    isAuth(navigate);
+    if (id) {
+      getSingleUser({ setLoading: setUserLoading, setUser, id });
+      getAllProjects({ setLoading: setProjectsLoading, setProjects });
+    }
   }, []);
+
+  const filteredProjects = projects?.filter((project: any) => {
+    return project?.owner == user?._id;
+  });
+
   return (
     <main className="w-screen h-screen overflow-hidden bg-gray-700">
       {(userLoading || projectsLoading) && <Loading />}
@@ -43,11 +51,11 @@ const Profile = () => {
           My Projects
         </h1>
         <section className="flex-grow max-h-[92%] gap-6 flex flex-wrap w-full justify-around p-4 px-6 overflow-scroll">
-          {projects && projects.length > 0 ? (
-            projects?.map((project: any, i: number) => {
+          {filteredProjects && filteredProjects.length > 0 ? (
+            filteredProjects?.map((project: any, i: number) => {
               return (
                 <Projects
-                  // owner={project.owner}
+                  //   owner={project.owner}
                   html={project.files[0].text}
                   css={project.files[1].text}
                   js={project.files[2].text}
@@ -81,4 +89,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default User;

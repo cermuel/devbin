@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { CodeContType } from "../types/context";
+import io from "socket.io-client";
+
+let socket = io("http://localhost:5000");
 
 const localStorageValueHTML = localStorage.getItem("HTML");
 const localStorageValueCSS = localStorage.getItem("CSS");
@@ -26,6 +29,7 @@ body{
   setJS: () => {},
   activeID: localStorageID ? localStorageID : "",
   setactiveID: () => {},
+  socket,
 });
 
 const CodeContext = ({ children }: { children: React.ReactNode }) => {
@@ -58,7 +62,17 @@ const CodeContext = ({ children }: { children: React.ReactNode }) => {
   }, [activeID]);
   return (
     <CodeCont.Provider
-      value={{ HTML, setHTML, CSS, setCSS, JS, setJS, activeID, setactiveID }}
+      value={{
+        HTML,
+        setHTML,
+        CSS,
+        setCSS,
+        JS,
+        setJS,
+        activeID,
+        setactiveID,
+        socket,
+      }}
     >
       {children}
     </CodeCont.Provider>

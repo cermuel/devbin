@@ -162,3 +162,37 @@ export const updateProject = async ({
     toast.error(`Name must be atleast 4 letters`);
   }
 };
+
+export const Collab = async ({
+  projectID,
+  userId,
+  setLoading,
+}: {
+  projectID: string;
+  userId: string;
+  setLoading: Dispatch<boolean>;
+}) => {
+  setLoading(true);
+  if (projectID && userId) {
+    try {
+      let updatedProject = await axios.post(
+        `${BASEURL}projects/${projectID}/collab`,
+        { userId },
+        {
+          headers: { Authorization: `${TOKEN}` },
+        }
+      );
+      toast.success(updatedProject.data.msg);
+      setLoading(false);
+    } catch (err: any) {
+      setLoading(false);
+      console.log(err);
+      let message =
+        err?.response.data?.msg || err?.message || `An error occurred`;
+      toast.error(message);
+    }
+  } else {
+    setLoading(false);
+    toast.error(`Select a project or add a user`);
+  }
+};

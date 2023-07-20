@@ -8,9 +8,10 @@ import { CodeCont } from "../../../contexts/CodeContext";
 import { CodeSettingsCont } from "../../../contexts/CodeSettingsContext";
 import { downloadCodeAsZip } from "../../../config/CodeLogic";
 import { Toaster } from "react-hot-toast";
-import { filesTypeType, projectType } from "../../../types/functions/project";
-import { createProject, updateProject } from "../../../functions/project";
-import { AiOutlineLoading } from "react-icons/ai";
+import { updateProject } from "../../../functions/project";
+import { AiOutlineLoading, AiOutlineUsergroupAdd } from "react-icons/ai";
+import { getAllUsers } from "../../../functions/user";
+import Collaborator from "./Collaborator";
 
 const Navbar = ({
   setShowMinScreen,
@@ -26,9 +27,11 @@ const Navbar = ({
   const [showSettings, setshowSettings] = useState<boolean>(false);
   const [showDropDown, setshowDropDown] = useState<boolean>(false);
   const [saveLoading, setsaveLoading] = useState<boolean>(false);
+  const [showCollab, setshowCollab] = useState<boolean>(false);
   return (
     <>
       {showSettings && <Settings setshowSettings={setshowSettings} />}
+      {showCollab && <Collaborator setshowCollab={setshowCollab} />}
       {showDropDown && <Dropdown setshowSettings={setshowSettings} />}
       <nav className="h-[7vh] p-2 w-full border-b-[1px] gap-3 border-b-[#1e1e1e] bg-[#101010] flex justify-between">
         <Toaster />
@@ -41,6 +44,12 @@ const Navbar = ({
           />
         </div>
         <div className="gap-3 border-b-[#1e1e1e] bg-[#101010] flex items-center">
+          <button
+            onClick={() => setshowCollab(true)}
+            className="bg-pry h-full sm:px-4 px-2 gap-2 flex text-white justify-center rounded-sm items-center"
+          >
+            <AiOutlineUsergroupAdd />
+          </button>
           <button
             onClick={() =>
               updateProject({

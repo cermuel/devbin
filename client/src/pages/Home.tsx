@@ -26,6 +26,7 @@ const Home = () => {
           projects?.map((project: any, i: number) => {
             return (
               <Projects
+                owner={project.owner}
                 html={project?.files[0].text}
                 css={project?.files[1].text}
                 js={project?.files[2].text}

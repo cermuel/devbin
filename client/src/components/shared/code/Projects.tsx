@@ -3,7 +3,7 @@ import { FiMaximize2 } from "react-icons/fi";
 //@ts-ignore
 import userIMG from "./../../../assets/main.jpeg";
 import { CodeCont } from "../../../contexts/CodeContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { selectProject } from "../../../utils/ProjectUtils";
 
 const Projects = ({
@@ -12,12 +12,14 @@ const Projects = ({
   js,
   projectName,
   id,
+  owner,
 }: {
   html: string;
   css: string;
   js: string;
   projectName: string;
   id: string;
+  owner?: string;
 }) => {
   const { setactiveID } = React.useContext(CodeCont);
   const navigate = useNavigate();
@@ -42,10 +44,14 @@ const Projects = ({
           className="w-28 rounded-3xl h-8 flex justify-center items-center bg-pry text-sm text-white"
         >
           SELECT
-        </button>
-        <button className="w-28 rounded-3xl h-8 flex justify-center items-center border-pry border-2 text-sm text-pry">
-          USER
-        </button>
+        </button>{" "}
+        {owner && (
+          <Link to={`/code/profile/${owner}`}>
+            <button className="w-28 rounded-3xl h-8 flex justify-center items-center border-pry border-2 text-sm text-pry">
+              USER
+            </button>
+          </Link>
+        )}
       </div>
       <div className="hover:opacity-20 w-full h-[80%]">
         <iframe

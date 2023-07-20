@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Entry from "./pages/Entry";
 import CreateProject from "./pages/CreateProject";
+import User from "./pages/User";
 
 function App() {
   return (
@@ -24,7 +25,8 @@ function App() {
             <Route path="/code/bin" element={<Code />} />
             <Route path="/code/bin/new" element={<CreateProject />} />
             <Route path="/code/home" element={<Home />} />
-            <Route path="/code/profile" element={<Profile />} />
+            <Route path="/code/profile/me" element={<Profile />} />
+            <Route path="/code/profile/:id" element={<User />} />
           </Routes>
         </CodeSettingsContext>
       </CodeContext>

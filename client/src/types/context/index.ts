@@ -9,6 +9,7 @@ export type CodeContType = {
   setJS: Dispatch<any>;
   activeID: string;
   setactiveID: Dispatch<string>;
+  socket: any;
 };
 
 export type CodeSettingsType = {

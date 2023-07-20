@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 //@ts-ignore
 import gif from "../assets/authleft.gif";
 //@ts-ignore
@@ -9,6 +9,7 @@ import Header from "../components/shared/auth/Header";
 import { logintype } from "../types/functions/auth";
 import { login } from "../functions/auth";
 import { Toaster } from "react-hot-toast";
+import { isAuthLogin } from "../utils/ChatUtils";
 
 const Login = () => {
   const [details, setDetails] = useState<logintype>({
@@ -16,6 +17,9 @@ const Login = () => {
     password: "",
   });
   const navigate = useNavigate();
+  useLayoutEffect(() => {
+    isAuthLogin(navigate);
+  }, []);
   return (
     <main className="w-screen bg-gray-800 h-screen flex items-center">
       <Toaster />

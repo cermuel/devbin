@@ -18,7 +18,7 @@ const Dropdown = ({
             Home
           </button>
         </Link>
-        <Link to={"/code/profile"}>
+        <Link to={"/code/profile/me"}>
           <button className="py-1 text-sm h-8 my-[2px] px-2 hover:bg-pry font-semibold text-white w-full text-left">
             Profile
           </button>

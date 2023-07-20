@@ -11,12 +11,11 @@ import { getProject } from "../functions/project";
 
 const Code = () => {
   const navigate = useNavigate();
-  const { HTML, CSS, JS, setHTML, setCSS, setJS, activeID } =
+  const { HTML, CSS, JS, setHTML, setCSS, setJS, activeID, socket } =
     useContext(CodeCont);
 
   const { setCodeName, codeName } = useContext(CodeSettingsCont);
   let savedID = localStorage.getItem("devbin_activecode");
-  console.log({ codeName, activeID, savedID });
   useLayoutEffect(() => {
     isAuth(navigate);
     activeID !== "" &&
@@ -31,6 +30,7 @@ const Code = () => {
   }, []);
   const { theme, fontSize, editorNotMounted } = useContext(CodeSettingsCont);
 
+  console.log(socket);
   useEffect(() => {
     localStorage.setItem("HTML", HTML);
   }, [HTML]);

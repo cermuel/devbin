@@ -12,3 +12,10 @@ export const isAuth = (navigate: any) => {
     window.location.reload();
   }
 };
+export const isAuthLogin = (navigate: any) => {
+  const token = localStorage.getItem("devbin_token");
+  if (token) {
+    navigate("/code/home");
+    window.location.reload();
+  }
+};
