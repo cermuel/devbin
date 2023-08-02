@@ -128,7 +128,7 @@ export default (
 			);
 
 			socket.on(
-				"typing",
+				"save",
 				async ({
 					room,
 					content,
@@ -178,24 +178,40 @@ export default (
 						"File updated successfully",
 					);
 
-					socket
-						.to(
-							room,
-						)
-						.to(
-							socket.userId,
-						)
-						.emit(
-							"typing",
-							{
-								file,
-								content,
-								userId:
-                  socket.userId,
-							},
-						);
+				// 	socket
+				// 		.to(
+				// 			room,
+				// 		)
+				// 		.to(
+				// 			socket.userId,
+				// 		)
+				// 		.emit(
+				// 			"typing",
+				// 			{
+				// 				file,
+				// 				content,
+				// 				userId:
+                //   socket.userId,
+				// 			},
+				// 		);
 				},
 			);
+
+			socket.on("deleteText", ({room, data})=>{
+				const text = data.text;
+    			const cursorPosition = data.cursorPosition;
+   		 		const timestamp = data.timestamp;
+
+				socket.to(room).emit("deleteText", {text, cursorPosition, timestamp});
+			})
+
+			socket.on("insertText", ({room, data})=>{
+				const text = data.text;
+				const cursorPosition = data.cursorPosition;
+				const timestamp = data.timestamp;
+
+				socket.to(room).emit("insertText", {text, cursorPosition, timestamp});
+			})
 
 			socket.on(
 				"leave",
