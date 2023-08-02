@@ -202,7 +202,7 @@ export default (
     			const cursorPosition = data.cursorPosition;
    		 		const timestamp = data.timestamp;
 
-				socket.to(room).emit("deleteText", {text, cursorPosition, timestamp});
+				socket.to(room).to(socket.userId).emit("deleteText", {text, cursorPosition, timestamp});
 			})
 
 			socket.on("insertText", ({room, data})=>{
@@ -210,7 +210,7 @@ export default (
 				const cursorPosition = data.cursorPosition;
 				const timestamp = data.timestamp;
 
-				socket.to(room).emit("insertText", {text, cursorPosition, timestamp});
+				socket.to(room).to(socket.userId).emit("insertText", {text, cursorPosition, timestamp});
 			})
 
 			socket.on(
