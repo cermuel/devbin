@@ -13,6 +13,7 @@ export const authenticateUser = async (
 	const token = req.headers["authorization"];
 
 	if (token) {
+		try {
 		const payload = isTokenValid(token);
 		const user = await Users.findById(payload.sub).select("-password");
 
@@ -20,6 +21,9 @@ export const authenticateUser = async (
 			req.user = user;
 
 			return next();
+		}
+		} catch (error) {
+			throw new CustomAPIError("Unauthorized", 401);
 		}
 	}
 	throw new CustomAPIError("Unauthorized", 401);
@@ -42,6 +46,7 @@ export const authenticateUserSocket = async (socket: MySocket, next: { (err?): v
 
 	const token = socket.handshake.auth.token ||socket.handshake.headers.token;
 	if (token) {
+		try {
 		const payload = isTokenValid(token as string);
 		const user = await Users.findById(payload.sub).select("-password");
 
@@ -54,6 +59,9 @@ export const authenticateUserSocket = async (socket: MySocket, next: { (err?): v
 			socket.sessionId = session._id.toString();
 			socket.userId = user._id.toString();
 			return next();
+		}
+		} catch (error) {
+			next(new CustomAPIError("Unauthorized", 401));
 		}
 	}
 	next(new CustomAPIError("Unauthorized", 401));

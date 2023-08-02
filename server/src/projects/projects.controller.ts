@@ -2,6 +2,8 @@ import { APIQuery } from "../types";
 import { createFiles } from "../files/files.controller";
 import { Projects } from "./projects.model";
 import { NotFoundError } from "../errors/not-found.error";
+import { Connections } from "./connect.model";
+import { connectStatus } from "./projects.dto";
 
 export const createProject = async (name: string, files: unknown[], user) => {
 	const createdFiles = await createFiles(files);
@@ -62,15 +64,98 @@ export const getSingleProject = async (id: string) => {
 	return project;
 };
 
-export const inviteCollaboration = async (id: string, userId) => {
+export const inviteCollaboration = async (id: string, receipient, sender) => {
 	const project = await Projects.findById(id);
 
 
 	if (!project)  throw new NotFoundError("Project not found");
 
+	if (project.owner.toString() !== sender._id.toString()) throw new Error("You are not the owner of this project");
 
-	if (project.collaborators.includes(userId)) return true;
-	project.collaborators.push(userId);
-	await project.save();
-	return true;
+	// create connection
+	const connection = await Connections.create({
+		type: "invite",
+		sender,
+		receipient,
+		project: project._id,
+	});
+
+	// TODO: send email
+
+	return "Invitation sent successfully";
 };
+
+export const requestCollaboration = async (id: string, sender) => {
+	const project = await Projects.findById(id);
+
+	if (!project) throw new NotFoundError("Project not found");
+
+	// create connection
+	const connection = await Connections.create({
+		type: "request",
+		sender,
+		receipient: project.owner,
+		project: project._id,
+	});
+
+	// TODO: send email
+
+	return "Request sent successfully";
+
+};
+
+export const getCollaborationRequests = async (user) => {
+	const requests = await Connections.find({ receipient: user._id, type: "request" }).populate("sender", "project");
+	return requests;
+}
+
+export const getCollaborationInvites = async (user) => {
+	const invites = await Connections.find({ receipient: user._id, type: "invite" }).populate("sender", "project");
+	return invites;
+}
+
+export const respondToInvite = async (id: string, response: connectStatus, userId) => {
+	const connection = await Connections.findById(id);
+	
+	if (!connection) throw new NotFoundError("Connection not found");
+	
+	const project = await Projects.findById(connection.project);
+
+	if (!project) throw new NotFoundError("Project not found");
+
+
+	if (connection.receipient.toString() !== userId.toString()) throw new Error("You are not the receipient of this connection");
+
+	if (response === "accepted") {
+		project.collaborators.push(connection.receipient);
+		await project.save();
+	}
+
+	connection.status = response;
+	await connection.save();
+
+	return "Response sent successfully";
+}
+
+export const respondToRequest = async (id: string, response: connectStatus, userId) => {
+	const connection = await Connections.findById(id);
+	
+	if (!connection) throw new NotFoundError("Connection not found");
+	
+	const project = await Projects.findById(connection.project);
+
+	if (!project) throw new NotFoundError("Project not found");
+
+
+	if (connection.receipient.toString() !== userId.toString()) throw new Error("You are not the receipient of this connection");
+
+	if (response === "accepted") {
+		project.collaborators.push(connection.sender);
+		await project.save();
+	}
+
+	connection.status = response;
+	await connection.save();
+
+	return "Response sent successfully";
+}

@@ -3,9 +3,9 @@ import { Router, Request, Response } from "express";
 const router = Router();
 
 
-import { createProject, getAllProjects, getMyProjects, getSingleProject, inviteCollaboration } from "./projects.controller";
+import { createProject, getAllProjects, getCollaborationInvites, getCollaborationRequests, getMyProjects, getSingleProject, inviteCollaboration, requestCollaboration, respondToInvite, respondToRequest } from "./projects.controller";
 import { APIResponse, APIParams, APIQuery } from "../types";
-import { IProject } from "./projects.dto";
+import { IConnection, IProject } from "./projects.dto";
 import { StatusCodes } from "http-status-codes";
 
 router.route("/").post(async (req: Request<object, object, IProject>, res: Response<APIResponse<{project: IProject}>>) => {
@@ -48,13 +48,53 @@ router.route("/:id").get(async (req: Request<APIParams, object, Record<string, n
 			.json({ msg:"Project updated Sucessfully", data: {project}, statusCode:StatusCodes.OK });
 	});
 
-router.post("/:id/collab", async (req: Request<APIParams, object, Record<string, never>, APIQuery>, 
+router.post("/:id/invite", async (req: Request<APIParams, object, Record<string, never>, APIQuery>, 
 	res: Response<APIResponse<{project: IProject}>>) => {
-	const result = await inviteCollaboration(req.params.id, req.body.userId);
-	if (result) {
-		return res.status(StatusCodes.OK).json({ msg:"Collaboration invite sent", statusCode:StatusCodes.OK });
-	}
-	return res.status(StatusCodes.BAD_REQUEST).json({ msg:"Collaboration invite failed", statusCode:StatusCodes.BAD_REQUEST });
+	const msg = await inviteCollaboration(req.params.id, req.body.userId, req.user._id);
+
+	return res.status(StatusCodes.OK).json({ msg, statusCode:StatusCodes.OK });
+
 });
+
+router.post("/:id/request", async (req: Request<APIParams, object, Record<string, never>, APIQuery>, 
+	res: Response<APIResponse<{project: IProject}>>) => {
+	const msg = await requestCollaboration(req.params.id, req.user._id);
+
+	return res.status(StatusCodes.OK).json({ msg, statusCode:StatusCodes.OK });
+
+});
+
+router.get("/requests", async (req: Request<APIParams, object, Record<string, never>, APIQuery>,
+	res: Response<APIResponse<{requests: IConnection[]}>>) => {
+		const requests = await getCollaborationRequests(req.user);
+
+	return res.status(StatusCodes.OK).json({ msg:"Requests fetched Sucessfully", data: {requests}, statusCode:StatusCodes.OK });
+
+	});
+
+router.get("/invites", async (req: Request<APIParams, object, Record<string, never>, APIQuery>,
+	res: Response<APIResponse<{invites: IConnection[]}>>) => {
+		const invites = await getCollaborationInvites(req.user);
+			
+		return res.status(StatusCodes.OK).json({ msg:"Invites fetched Sucessfully", data: {invites}, statusCode:StatusCodes.OK });
+		
+	});
+
+router.post("/invite/:id/respond", async (req: Request<APIParams, object, Record<string, never>, APIQuery>,
+	res: Response<APIResponse<{}>>) => {
+		const {response} = req.body;
+
+		const msg = await respondToInvite(req.params.id, response, req.user);
+		res.status(StatusCodes.OK).json({ msg, statusCode:StatusCodes.OK });
+	});
+
+router.post("/request/:id/respond", async (req: Request<APIParams, object, Record<string, never>, APIQuery>,
+	res: Response<APIResponse<{}>>) => {
+		const {response} = req.body;
+	
+		const msg = await respondToRequest(req.params.id, response, req.user);
+		res.status(StatusCodes.OK).json({ msg, statusCode:StatusCodes.OK });
+	});
+
 
 export default router;
