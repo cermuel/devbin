@@ -1,5 +1,5 @@
 import React, { Dispatch, useContext } from "react";
-import { FontSizes, monacoEditorThemes } from "../../../utils/ChatUtils";
+import { FontSizes, monacoEditorThemes } from "../../../utils/CodeUtils";
 import { CodeSettingsCont } from "../../../contexts/CodeSettingsContext";
 
 const Settings = ({

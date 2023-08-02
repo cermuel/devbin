@@ -7,11 +7,11 @@ import Dropdown from "./Dropdown";
 import { CodeCont } from "../../../contexts/CodeContext";
 import { CodeSettingsCont } from "../../../contexts/CodeSettingsContext";
 import { downloadCodeAsZip } from "../../../config/CodeLogic";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import { updateProject } from "../../../functions/project";
 import { AiOutlineLoading, AiOutlineUsergroupAdd } from "react-icons/ai";
-import { getAllUsers } from "../../../functions/user";
 import Collaborator from "./Collaborator";
+import { BsToggle2Off, BsToggle2On } from "react-icons/bs";
 
 const Navbar = ({
   setShowMinScreen,
@@ -22,12 +22,17 @@ const Navbar = ({
   toShow: string[];
   showMinScreen: string;
 }) => {
-  const { HTML, CSS, JS, activeID } = useContext(CodeCont);
+  const { HTML, CSS, JS, activeID, live, setLive } = useContext(CodeCont);
   const { codeName, setCodeName } = useContext(CodeSettingsCont);
   const [showSettings, setshowSettings] = useState<boolean>(false);
   const [showDropDown, setshowDropDown] = useState<boolean>(false);
   const [saveLoading, setsaveLoading] = useState<boolean>(false);
   const [showCollab, setshowCollab] = useState<boolean>(false);
+
+  React.useEffect(() => {
+    console.log(live);
+  }, [live]);
+
   return (
     <>
       {showSettings && <Settings setshowSettings={setshowSettings} />}
@@ -43,12 +48,28 @@ const Navbar = ({
             className="text-pry md:text-xl outline-none bg-transparent w-full font-semibold"
           />
         </div>
+
         <div className="gap-3 border-b-[#1e1e1e] bg-[#101010] flex items-center">
           <button
             onClick={() => setshowCollab(true)}
             className="bg-pry h-full sm:px-4 px-2 gap-2 flex text-white justify-center rounded-sm items-center"
           >
             <AiOutlineUsergroupAdd />
+          </button>
+          <button
+            onClick={() => {
+              setLive(!live);
+              live == false
+                ? toast.success("You're now live")
+                : toast("You've disconnected");
+            }}
+            className="bg-pry text-xl h-full sm:px-4 px-2 gap-2 flex text-white justify-center rounded-sm items-center"
+          >
+            {live ? (
+              <BsToggle2On className="text-white" />
+            ) : (
+              <BsToggle2Off className="text-gray-300" />
+            )}
           </button>
           <button
             onClick={() =>
@@ -58,7 +79,7 @@ const Navbar = ({
                 setLoading: setsaveLoading,
               })
             }
-            className="bg-pry h-full px-2 gap-2 flex text-white justify-center rounded-sm items-center"
+            className="bg-pry max-sm:hidden h-full px-2 gap-2 flex text-white justify-center rounded-sm items-center"
           >
             {saveLoading ? (
               <AiOutlineLoading className="animate-spin" />
@@ -93,7 +114,7 @@ const Navbar = ({
       </nav>
       <div className="md:hidden flex gap-2 h-[4vh] bg-[#101010]">
         {toShow.map((t: string, i: number) => {
-          const active = showMinScreen == t;
+          const active = showMinScreen === t;
           return (
             <button
               key={i}

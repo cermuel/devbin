@@ -10,6 +10,8 @@ export type CodeContType = {
   activeID: string;
   setactiveID: Dispatch<string>;
   socket: any;
+  live: boolean;
+  setLive: Dispatch<boolean>;
 };
 
 export type CodeSettingsType = {

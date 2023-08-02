@@ -61,7 +61,7 @@ export const getSingleUser = async ({
   id: string;
 }) => {
   setLoading(true);
-  if (typeof id == "string") {
+  if (typeof id === "string") {
     try {
       let user = await axios.get(`${BASEURL}users/${id}`, {
         headers: { Authorization: `${TOKEN}` },

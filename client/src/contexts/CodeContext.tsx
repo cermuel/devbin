@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { CodeContType } from "../types/context";
 import io from "socket.io-client";
 
@@ -8,8 +8,7 @@ const localStorageValueJS = localStorage.getItem("JS");
 const localStorageID = localStorage.getItem("devbin_activecode");
 const token = localStorage.getItem("devbin_token");
 
-let socket = io("http://localhost:5000", {
-  // reconnectionDelayMax: 10000,
+let socket: any = io("http://localhost:5000", {
   auth: {
     token: token,
   },
@@ -36,9 +35,20 @@ body{
   activeID: localStorageID ? localStorageID : "",
   setactiveID: () => {},
   socket,
+  live: false,
+  setLive: () => {},
 });
 
 const CodeContext = ({ children }: { children: React.ReactNode }) => {
+  useLayoutEffect(() => {
+    socket.on("session", (data: any) => {
+      const { sessionId, user } = data;
+      socket.auth = { sessionId };
+      socket.user = { user };
+      localStorage.setItem("devbin_sessionId", sessionId);
+      localStorage.setItem("devbin_user", JSON.stringify(user));
+    });
+  }, []);
   const [HTML, setHTML] = useState<string>(() => {
     return localStorageValueHTML
       ? localStorageValueHTML
@@ -63,12 +73,15 @@ const CodeContext = ({ children }: { children: React.ReactNode }) => {
   const [activeID, setactiveID] = useState<string>(() => {
     return localStorageID ? localStorageID : "";
   });
+  const [live, setLive] = useState<boolean>(false);
   useEffect(() => {
     localStorage.setItem("devbin_activecode", activeID);
   }, [activeID]);
   return (
     <CodeCont.Provider
       value={{
+        live,
+        setLive,
         HTML,
         setHTML,
         CSS,

@@ -19,11 +19,11 @@ const NavTwo = ({
     <>
       {showSettings && <Settings setshowSettings={setshowSettings} />}
       {showDropDown && <Dropdown setshowSettings={setshowSettings} />}
-      <nav className="h-[7vh] p-2 w-full border-b-[1px] gap-3 border-b-[#1e1e1e] bg-[#101010] flex justify-between">
+      <nav className="h-[7vh] p-2 w-full border-b-[1px] gap-3 border-b-[#1e1e1e] bg-black flex justify-between">
         <Toaster />
         <div></div>
         {show ? null : (
-          <div className="bg-gray-700 px-4 flex-grow flex items-center">
+          <div className="bg-black px-4 flex-grow flex items-center">
             <IoMdSearch className="text-2xl text-gray-300" />
             <input
               onChange={onChange}

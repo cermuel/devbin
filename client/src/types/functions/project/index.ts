@@ -13,3 +13,13 @@ export enum filesTypeType {
   css = "css",
   js = "js",
 }
+
+export type FileID = {
+  HTMLID: string;
+  CSSID: string;
+  JSID: string;
+};
+
+const firstname = "Samuel";
+
+const lastname: string = "Ngene";

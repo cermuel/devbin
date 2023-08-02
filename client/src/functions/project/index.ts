@@ -1,6 +1,6 @@
 import { toast } from "react-hot-toast";
 import axios from "axios";
-import { projectType } from "../../types/functions/project";
+import { FileID, projectType } from "../../types/functions/project";
 import { Dispatch } from "react";
 import { NavigateFunction } from "react-router-dom";
 
@@ -54,6 +54,7 @@ export const getProject = async ({
   setJS,
   setLoading,
   setCodeName,
+  setFilesID,
 }: {
   id: string;
   setHTML: Dispatch<string>;
@@ -61,6 +62,7 @@ export const getProject = async ({
   setJS: Dispatch<string>;
   setLoading: Dispatch<boolean>;
   setCodeName: Dispatch<string>;
+  setFilesID: Dispatch<FileID>;
 }) => {
   setLoading(true);
   try {
@@ -71,6 +73,11 @@ export const getProject = async ({
     let HTML = project?.files[0]?.text;
     let CSS = project?.files[1]?.text;
     let JS = project?.files[2]?.text;
+    setFilesID({
+      HTMLID: project?.files[0]?._id,
+      CSSID: project?.files[1]?._id,
+      JSID: project?.files[2]?._id,
+    });
     setHTML(HTML);
     setCSS(CSS);
     setJS(JS);

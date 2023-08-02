@@ -6,16 +6,34 @@ import CodeEditor from "../components/code/Editor";
 import HTMLRenderer from "../components/code/HTMLRender";
 import Loading from "../components/shared/code/Loading";
 import { useNavigate } from "react-router-dom";
-import { isAuth } from "../utils/ChatUtils";
+import { isAuth } from "../utils/CodeUtils";
 import { getProject } from "../functions/project";
+import { FileID } from "../types/functions/project";
+import { toast } from "react-hot-toast";
+import { handleSucessError, toShow, typing } from "../utils/ProjectUtils";
 
 const Code = () => {
   const navigate = useNavigate();
-  const { HTML, CSS, JS, setHTML, setCSS, setJS, activeID, socket } =
-    useContext(CodeCont);
 
-  const { setCodeName, codeName } = useContext(CodeSettingsCont);
-  let savedID = localStorage.getItem("devbin_activecode");
+  //
+  //context
+  const { HTML, CSS, JS, setHTML, setCSS, setJS, activeID, socket, live } =
+    useContext(CodeCont);
+  const { setCodeName, codeName, theme, fontSize, editorNotMounted } =
+    useContext(CodeSettingsCont);
+
+  //
+  //states
+  const [filesID, setFilesID] = useState<FileID>({
+    HTMLID: "",
+    CSSID: "",
+    JSID: "",
+  });
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showMinScreen, setshowMinScreen] = useState<string>("HTML");
+
+  //
+  //effects
   useLayoutEffect(() => {
     isAuth(navigate);
     activeID !== "" &&
@@ -26,24 +44,47 @@ const Code = () => {
         setJS,
         setLoading,
         setCodeName,
+        setFilesID,
       });
   }, []);
-  const { theme, fontSize, editorNotMounted } = useContext(CodeSettingsCont);
 
-  console.log(socket);
+  useEffect(() => {
+    live ? socket.emit("join", activeID) : socket.emit("leave", activeID);
+  }, [live]);
+
   useEffect(() => {
     localStorage.setItem("HTML", HTML);
+    typing({
+      socket,
+      room: activeID,
+      content: HTML,
+      file: filesID.HTMLID,
+    });
+    handleSucessError(socket);
   }, [HTML]);
+
   useEffect(() => {
     localStorage.setItem("CSS", CSS);
+    typing({
+      socket,
+      room: activeID,
+      content: CSS,
+      file: filesID.CSSID,
+    });
+    handleSucessError(socket);
   }, [CSS]);
+
   useEffect(() => {
     localStorage.setItem("JS", JS);
+    typing({
+      socket,
+      room: activeID,
+      content: JS,
+      file: filesID.JSID,
+    });
+    handleSucessError(socket);
   }, [JS]);
 
-  let toShow = ["HTML", "CSS", "JAVASCRIPT", "OUTPUT"];
-  const [loading, setLoading] = useState<boolean>(false);
-  const [showMinScreen, setshowMinScreen] = useState<string>("HTML");
   const editors = [
     {
       name: "HTML",
@@ -64,6 +105,7 @@ const Code = () => {
       setValue: setJS,
     },
   ];
+
   if (activeID && activeID !== "") {
     return (
       <CodeLayout
@@ -113,7 +155,6 @@ const Code = () => {
         <>
           <div className="w-full h-full flex-col flex justify-center items-center">
             <p className="text-2xl font-bold mb-1">
-              {" "}
               You have 0 active projects
             </p>
             <div className="flex flex-wrap gap-4 justify-center">

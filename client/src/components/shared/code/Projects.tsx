@@ -37,7 +37,7 @@ const Projects = ({
     `;
 
   return (
-    <div className="sm:w-[400px] flex flex-col h-64 sm:h-72 w-full relative m-4">
+    <div className="sm:w-[500px] flex flex-col h-64 sm:h-80 w-full relative m-4">
       <div className="absolute w-full opacity-0 hover:opacity-80 flex flex-col justify-center items-center gap-2 rounded-md bg-white h-[80%]">
         <button
           onClick={() => selectProject({ id, setactiveID, navigate })}

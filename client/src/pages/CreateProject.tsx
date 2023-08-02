@@ -9,12 +9,12 @@ import { filesTypeType, projectType } from "../types/functions/project";
 
 const CreateProject = () => {
   const files = {
-    HTML: "<h1 id='welcome'>Hello world!</h1>",
+    HTML: "<h1 id='welcome'>Welcome to DevBIN👋🏽!</h1>",
     CSS: `h1{
-      color: red
+      color: #737cde;
 }
 body{
-      background-color: #737cde;
+      background-color: white;
 }`,
     JS: "const welcome = document.getElementById('welcome');",
   };
@@ -25,7 +25,7 @@ body{
   return (
     <>
       <NavTwo show={"true"} />
-      <main className="w-screen h-screen px-8 gap-12 flex-col bg-gray-700 flex justify-center items-center">
+      <main className="w-screen h-screen px-8 gap-12 flex-col bg-black flex justify-center items-center">
         <Toaster />
         <h1 className="w-full text-center text-4xl sm:text-5xl font-extrabold">
           <span

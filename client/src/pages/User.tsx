@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getSingleUser } from "../functions/user";
 //@ts-ignore
 import userIMG from "../assets/main.jpeg";
-import { isAuth } from "../utils/ChatUtils";
+import { isAuth } from "../utils/CodeUtils";
 import Loading from "../components/shared/code/Loading";
 import NavTwo from "../components/shared/code/NavTwo";
 import Projects from "../components/shared/code/Projects";
@@ -26,7 +26,7 @@ const User = () => {
   }, []);
 
   const filteredProjects = projects?.filter((project: any) => {
-    return project?.owner == user?._id;
+    return project?.owner === user?._id;
   });
 
   return (
