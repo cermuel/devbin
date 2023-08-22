@@ -3,7 +3,7 @@ import Editor from "@monaco-editor/react";
 import { FaHtml5, FaCss3 } from "react-icons/fa";
 import { SiJavascript } from "react-icons/si";
 import { CodeSettingsCont } from "../../contexts/CodeSettingsContext";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 
 const CodeEditor = ({
   theme,
@@ -19,8 +19,24 @@ const CodeEditor = ({
   showMinScreen: string;
 }) => {
   const { setEditorNotMounted } = useContext(CodeSettingsCont);
+  const editorRef = useRef(null);
   const handleEditorDidMount = (editor: any) => {
     setEditorNotMounted(false);
+    editorRef.current = editor;
+
+    editor.onDidChangeCursorPosition(handleCursorPositionChange);
+  };
+  const handleCursorPositionChange = (e: any) => {
+    // Get the updated cursor position
+    const newPosition = e.position;
+
+    // You can access line and column numbers as follows
+    const line = newPosition.lineNumber;
+    const column = newPosition.column;
+
+    let cursor = { line, column };
+
+    console.log(cursor);
   };
   return (
     <div

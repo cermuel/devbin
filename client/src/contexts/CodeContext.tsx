@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { CodeContType } from "../types/context";
 import io from "socket.io-client";
+import { handleJoin } from "../utils/ProjectUtils";
 
 const localStorageValueHTML = localStorage.getItem("HTML");
 const localStorageValueCSS = localStorage.getItem("CSS");
@@ -37,6 +38,8 @@ body{
   socket,
   live: false,
   setLive: () => {},
+  liveError: "Error going live, try again!",
+  setLiveError: () => {},
 });
 
 const CodeContext = ({ children }: { children: React.ReactNode }) => {
@@ -45,6 +48,7 @@ const CodeContext = ({ children }: { children: React.ReactNode }) => {
       const { sessionId, user } = data;
       socket.auth = { sessionId };
       socket.user = { user };
+      socket.userId = user._id;
       localStorage.setItem("devbin_sessionId", sessionId);
       localStorage.setItem("devbin_user", JSON.stringify(user));
     });
@@ -74,6 +78,17 @@ const CodeContext = ({ children }: { children: React.ReactNode }) => {
     return localStorageID ? localStorageID : "";
   });
   const [live, setLive] = useState<boolean>(false);
+  const [liveError, setLiveError] = useState<string>(
+    "Error going live, try again!"
+  );
+  useEffect(() => {
+    handleJoin({ live, setLiveError, socket, activeID });
+    console.log(`ran`);
+  }, []);
+  useEffect(() => {
+    console.log(liveError);
+  }, [liveError]);
+
   useEffect(() => {
     localStorage.setItem("devbin_activecode", activeID);
   }, [activeID]);
@@ -91,6 +106,8 @@ const CodeContext = ({ children }: { children: React.ReactNode }) => {
         activeID,
         setactiveID,
         socket,
+        liveError,
+        setLiveError,
       }}
     >
       {children}

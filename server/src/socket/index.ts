@@ -4,6 +4,7 @@ import { MySocket } from "../types";
 import { Sessions } from "./session.model";
 import { getSingleProject } from "../projects/projects.controller";
 import { updateFileContent } from "../files/files.controller";
+
 export default (io: Server) => {
   io.use(authenticateUserSocket);
 

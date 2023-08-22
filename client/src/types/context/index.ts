@@ -12,6 +12,8 @@ export type CodeContType = {
   socket: any;
   live: boolean;
   setLive: Dispatch<boolean>;
+  setLiveError: Dispatch<string>;
+  liveError: string;
 };
 
 export type CodeSettingsType = {

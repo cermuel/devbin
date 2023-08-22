@@ -5,7 +5,11 @@ import { getMe } from "../functions/user";
 import { isAuth } from "../utils/CodeUtils";
 //@ts-ignore
 import userIMG from "../assets/main.jpeg";
-import { getMyProjects } from "../functions/project";
+import {
+  InvitesSent,
+  getMyProjects,
+  projectRequests,
+} from "../functions/project";
 import Projects from "../components/shared/code/Projects";
 import Loading from "../components/shared/code/Loading";
 
@@ -16,6 +20,8 @@ const Profile = () => {
   const [user, setUser] = useState<any>();
   const [projects, setProjects] = useState<any[]>([]);
   const [query, setQuery] = useState<string>("");
+  const [requests, setRequests] = useState<any[]>([]);
+  const [invites, setInvites] = useState<any[]>([]);
   let filteredProjects = projects.filter((project: any) => {
     return project.name.toLowerCase().includes(query.toLowerCase());
   });
@@ -25,7 +31,13 @@ const Profile = () => {
 
     getMe({ setLoading: setUserLoading, setUser });
     getMyProjects({ setLoading: setProjectsLoading, setProjects });
+    projectRequests({ setRequests });
+    InvitesSent({ setInvites });
   }, []);
+  console.log(invites);
+  const [active, setActive] = useState("My Projects");
+
+  const tabs = ["My Projects", "Invites Sent", "Project Requests"];
   return (
     <main className="w-screen h-screen overflow-hidden bg-black">
       {(userLoading || projectsLoading) && <Loading />}
@@ -44,9 +56,20 @@ const Profile = () => {
         </div>
       </section>
       <section className="h-[68%] relative w-full bg-black border-t-[1px] border-t-gray-800 sm:pb-14 p-4 max-sm:h-[75%]">
-        <h1 className="sm:text-5xl mb-4 sm:pt-10 text-3xl font-bold text-white">
-          My Projects
-        </h1>
+        <div className="flex">
+          {tabs.map((tab: string) => {
+            return (
+              <h1
+                onClick={() => setActive(tab)}
+                className={`sm:text-5xl mb-4 sm:pt-10 text-sm font-bold text-white w-[33%] text-center ${
+                  active == tab && "underline"
+                } `}
+              >
+                {tab}
+              </h1>
+            );
+          })}
+        </div>
         <section className="flex-grow max-h-[92%] gap-8 flex flex-wrap w-full justify-around p-4 px-6 overflow-scroll">
           {projects && projects?.length > 0 ? (
             filteredProjects.length > 0 ? (

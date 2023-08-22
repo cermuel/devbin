@@ -22,16 +22,13 @@ const Navbar = ({
   toShow: string[];
   showMinScreen: string;
 }) => {
-  const { HTML, CSS, JS, activeID, live, setLive } = useContext(CodeCont);
+  const { HTML, CSS, JS, activeID, live, setLive, liveError } =
+    useContext(CodeCont);
   const { codeName, setCodeName } = useContext(CodeSettingsCont);
   const [showSettings, setshowSettings] = useState<boolean>(false);
   const [showDropDown, setshowDropDown] = useState<boolean>(false);
   const [saveLoading, setsaveLoading] = useState<boolean>(false);
   const [showCollab, setshowCollab] = useState<boolean>(false);
-
-  React.useEffect(() => {
-    console.log(live);
-  }, [live]);
 
   return (
     <>
@@ -59,8 +56,11 @@ const Navbar = ({
           <button
             onClick={() => {
               setLive(!live);
+              liveError == "You are not a collaborator" && setLive(false);
               live == false
-                ? toast.success("You're now live")
+                ? toast(liveError)
+                : liveError == "Error going live, try again!"
+                ? setLive(false)
                 : toast("You've disconnected");
             }}
             className="bg-pry text-xl h-full sm:px-4 px-2 gap-2 flex text-white justify-center rounded-sm items-center"

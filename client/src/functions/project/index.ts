@@ -203,3 +203,45 @@ export const Collab = async ({
     toast.error(`Select a project or add a user`);
   }
 };
+
+export const InvitesSent = async ({
+  setInvites,
+}: {
+  setInvites: Dispatch<any[]>;
+}) => {
+  try {
+    let invites = await axios.get(`${BASEURL}projects/invites`, {
+      headers: { Authorization: `${TOKEN}` },
+    });
+
+    setInvites(invites?.data?.data?.projects);
+    // setLoading(false);
+  } catch (err: any) {
+    // setLoading(false);
+    console.log(err);
+    let message =
+      err?.response.data?.msg || err?.message || `An error occurred`;
+    toast.error(message);
+  }
+};
+
+export const projectRequests = async ({
+  setRequests,
+}: {
+  setRequests: Dispatch<any[]>;
+}) => {
+  try {
+    let requests = await axios.get(`${BASEURL}projects/requests`, {
+      headers: { Authorization: `${TOKEN}` },
+    });
+
+    setRequests(requests?.data?.data?.projects);
+    // setLoading(false);
+  } catch (err: any) {
+    // setLoading(false);
+    console.log(err);
+    let message =
+      err?.response.data?.msg || err?.message || `An error occurred`;
+    toast.error(message);
+  }
+};

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import CodeLayout from "../components/layouts/CodeLayout";
 import { CodeCont } from "../contexts/CodeContext";
 import { CodeSettingsCont } from "../contexts/CodeSettingsContext";
@@ -9,17 +9,32 @@ import { useNavigate } from "react-router-dom";
 import { isAuth } from "../utils/CodeUtils";
 import { getProject } from "../functions/project";
 import { FileID } from "../types/functions/project";
-import { toast } from "react-hot-toast";
-import { handleSucessError, toShow, typing } from "../utils/ProjectUtils";
+import {
+  handleJoin,
+  handleSucessError,
+  save,
+  toShow,
+} from "../utils/ProjectUtils";
 
 const Code = () => {
   const navigate = useNavigate();
 
   //
   //context
-  const { HTML, CSS, JS, setHTML, setCSS, setJS, activeID, socket, live } =
-    useContext(CodeCont);
-  const { setCodeName, codeName, theme, fontSize, editorNotMounted } =
+  const {
+    HTML,
+    CSS,
+    JS,
+    setHTML,
+    setCSS,
+    setJS,
+    activeID,
+    socket,
+    live,
+    setLive,
+    setLiveError,
+  } = useContext(CodeCont);
+  const { setCodeName, theme, fontSize, editorNotMounted } =
     useContext(CodeSettingsCont);
 
   //
@@ -49,39 +64,43 @@ const Code = () => {
   }, []);
 
   useEffect(() => {
-    live ? socket.emit("join", activeID) : socket.emit("leave", activeID);
+    setLive(live);
+    handleJoin({ live, socket, activeID, setLiveError });
   }, [live]);
 
   useEffect(() => {
     localStorage.setItem("HTML", HTML);
-    typing({
-      socket,
-      room: activeID,
-      content: HTML,
-      file: filesID.HTMLID,
-    });
+    live == true &&
+      save({
+        socket,
+        room: activeID,
+        content: HTML,
+        file: filesID.HTMLID,
+      });
     handleSucessError(socket);
   }, [HTML]);
 
   useEffect(() => {
     localStorage.setItem("CSS", CSS);
-    typing({
-      socket,
-      room: activeID,
-      content: CSS,
-      file: filesID.CSSID,
-    });
+    live == true &&
+      save({
+        socket,
+        room: activeID,
+        content: CSS,
+        file: filesID.CSSID,
+      });
     handleSucessError(socket);
   }, [CSS]);
 
   useEffect(() => {
     localStorage.setItem("JS", JS);
-    typing({
-      socket,
-      room: activeID,
-      content: JS,
-      file: filesID.JSID,
-    });
+    live == true &&
+      save({
+        socket,
+        room: activeID,
+        content: JS,
+        file: filesID.JSID,
+      });
     handleSucessError(socket);
   }, [JS]);
 
