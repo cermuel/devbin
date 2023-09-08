@@ -166,7 +166,7 @@ export default (io: Server) => {
 
       socket.on(
         "deleteText",
-        ({ room, data }) => {
+        ({ room, data, file }) => {
           const text = data.text;
           const cursorPosition =
             data.cursorPosition;
@@ -180,13 +180,14 @@ export default (io: Server) => {
               text,
               cursorPosition,
               timestamp,
+              file,
             });
         },
       );
 
       socket.on(
         "insertText",
-        ({ room, data }) => {
+        ({ room, data, file }) => {
           const text = data.text;
           const cursorPosition =
             data.cursorPosition;
@@ -200,6 +201,7 @@ export default (io: Server) => {
               text,
               cursorPosition,
               timestamp,
+              file,
             });
         },
       );
