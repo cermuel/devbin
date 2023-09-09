@@ -34,7 +34,6 @@ const Profile = () => {
     projectRequests({ setRequests });
     InvitesSent({ setInvites });
   }, []);
-  console.log(invites);
   const [active, setActive] = useState("My Projects");
 
   const tabs = ["My Projects", "Invites Sent", "Project Requests"];

@@ -236,9 +236,7 @@ export const projectRequests = async ({
     });
 
     setRequests(requests?.data?.data?.projects);
-    // setLoading(false);
   } catch (err: any) {
-    // setLoading(false);
     console.log(err);
     let message =
       err?.response.data?.msg || err?.message || `An error occurred`;

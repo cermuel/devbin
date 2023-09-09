@@ -8,10 +8,12 @@ import Loading from "../components/shared/code/Loading";
 import { useNavigate } from "react-router-dom";
 import { isAuth } from "../utils/CodeUtils";
 import { getProject } from "../functions/project";
-import { FileID } from "../types/functions/project";
+import { FileID, insertTextType } from "../types/functions/project";
 import {
+  deleteText,
   handleJoin,
   handleSucessError,
+  insertText,
   save,
   toShow,
 } from "../utils/ProjectUtils";
@@ -33,6 +35,12 @@ const Code = () => {
     live,
     setLive,
     setLiveError,
+    HTMLCursor,
+    CSSCursor,
+    JSCursor,
+    HTMLEditor,
+    CSSEditor,
+    JSEditor,
   } = useContext(CodeCont);
   const { setCodeName, theme, fontSize, editorNotMounted } =
     useContext(CodeSettingsCont);
@@ -67,7 +75,6 @@ const Code = () => {
     setLive(live);
     handleJoin({ live, socket, activeID, setLiveError });
   }, [live]);
-
   useEffect(() => {
     localStorage.setItem("HTML", HTML);
     live == true &&
@@ -78,6 +85,26 @@ const Code = () => {
         file: filesID.HTMLID,
       });
     handleSucessError(socket);
+    insertText({
+      socket,
+      room: activeID,
+      file: filesID.HTMLID,
+      data: {
+        timestamp: new Date(),
+        cursorPosition: HTMLCursor,
+        text: HTML,
+      },
+    });
+    deleteText({
+      socket,
+      room: activeID,
+      file: filesID.HTMLID,
+      data: {
+        timestamp: new Date(),
+        cursorPosition: HTMLCursor,
+        text: HTML,
+      },
+    });
   }, [HTML]);
 
   useEffect(() => {
@@ -103,6 +130,17 @@ const Code = () => {
       });
     handleSucessError(socket);
   }, [JS]);
+
+  useEffect(() => {
+    socket.on("insertText", (data: insertTextType) => {
+      if (data) {
+        HTMLEditor?.setPosition({
+          lineNumber: data?.cursorPosition?.line,
+          column: data?.cursorPosition?.column,
+        });
+      }
+    });
+  }, [socket]);
 
   const editors = [
     {

@@ -14,8 +14,23 @@ export type CodeContType = {
   setLive: Dispatch<boolean>;
   setLiveError: Dispatch<string>;
   liveError: string;
+  HTMLCursor: cursorType;
+  setHTMLCursor: Dispatch<cursorType>;
+  CSSCursor: cursorType;
+  setCSSCursor: Dispatch<cursorType>;
+  JSCursor: cursorType;
+  setJSCursor: Dispatch<cursorType>;
+  HTMLEditor: any;
+  setHTMLEditor: Dispatch<any>;
+  CSSEditor: any;
+  setCSSEditor: Dispatch<any>;
+  JSEditor: any;
+  setJSEditor: Dispatch<any>;
 };
-
+export type cursorType = {
+  line: number;
+  column: number;
+};
 export type CodeSettingsType = {
   theme: string;
   setTheme: Dispatch<string>;

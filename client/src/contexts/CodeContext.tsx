@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { CodeContType } from "../types/context";
+import { CodeContType, cursorType } from "../types/context";
 import io from "socket.io-client";
 import { handleJoin } from "../utils/ProjectUtils";
 
@@ -40,6 +40,18 @@ body{
   setLive: () => {},
   liveError: "Error going live, try again!",
   setLiveError: () => {},
+  HTMLCursor: { line: 0, column: 0 },
+  setHTMLCursor: () => {},
+  CSSCursor: { line: 0, column: 0 },
+  setCSSCursor: () => {},
+  JSCursor: { line: 0, column: 0 },
+  setJSCursor: () => {},
+  HTMLEditor: null,
+  setHTMLEditor: () => {},
+  CSSEditor: null,
+  setCSSEditor: () => {},
+  JSEditor: null,
+  setJSEditor: () => {},
 });
 
 const CodeContext = ({ children }: { children: React.ReactNode }) => {
@@ -81,6 +93,18 @@ const CodeContext = ({ children }: { children: React.ReactNode }) => {
   const [liveError, setLiveError] = useState<string>(
     "Error going live, try again!"
   );
+  const [HTMLCursor, setHTMLCursor] = useState<cursorType>({
+    line: 0,
+    column: 0,
+  });
+  const [CSSCursor, setCSSCursor] = useState<cursorType>({
+    line: 0,
+    column: 0,
+  });
+  const [JSCursor, setJSCursor] = useState<cursorType>({ line: 0, column: 0 });
+  const [HTMLEditor, setHTMLEditor] = useState(null);
+  const [CSSEditor, setCSSEditor] = useState(null);
+  const [JSEditor, setJSEditor] = useState(null);
   useEffect(() => {
     handleJoin({ live, setLiveError, socket, activeID });
     console.log(`ran`);
@@ -95,6 +119,12 @@ const CodeContext = ({ children }: { children: React.ReactNode }) => {
   return (
     <CodeCont.Provider
       value={{
+        HTMLEditor,
+        setHTMLEditor,
+        CSSEditor,
+        setCSSEditor,
+        JSEditor,
+        setJSEditor,
         live,
         setLive,
         HTML,
@@ -108,6 +138,12 @@ const CodeContext = ({ children }: { children: React.ReactNode }) => {
         socket,
         liveError,
         setLiveError,
+        HTMLCursor,
+        setHTMLCursor,
+        CSSCursor,
+        setCSSCursor,
+        JSCursor,
+        setJSCursor,
       }}
     >
       {children}

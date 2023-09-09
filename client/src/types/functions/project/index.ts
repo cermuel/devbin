@@ -20,6 +20,12 @@ export type FileID = {
   JSID: string;
 };
 
-const firstname = "Samuel";
-
-const lastname: string = "Ngene";
+export type insertTextType = {
+  cursorPosition: {
+    line: number;
+    column: number;
+  };
+  text: string;
+  timestamp: Date;
+  file: string;
+};

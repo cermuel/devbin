@@ -1,5 +1,4 @@
 import { Dispatch } from "react";
-import { toast } from "react-hot-toast";
 import { NavigateFunction } from "react-router-dom";
 
 export const selectProject = ({
@@ -38,12 +37,12 @@ export const handleJoin = ({
 }) => {
   live ? socket.emit("join", activeID) : socket.emit("leave", activeID);
   socket.on("error", (data: string) => {
-    if (data == "You are not a collaborator") {
+    if (data === "You are not a collaborator") {
       setLiveError(data);
     }
   });
   socket.on("success", (data: string) => {
-    if (data == "Joined successfully") {
+    if (data === "Joined successfully") {
       setLiveError(data);
     }
   });
@@ -70,6 +69,7 @@ export const save = ({
 export const insertText = ({
   room,
   data,
+  file,
   socket,
 }: {
   room: string;
@@ -81,13 +81,16 @@ export const insertText = ({
     text: string;
     timestamp: Date;
   };
+  file: string;
   socket: any;
 }) => {
-  socket.emit("insertText", { room, data });
+  socket.emit("insertText", { room, data, file });
 };
+
 export const deleteText = ({
   room,
   data,
+  file,
   socket,
 }: {
   room: string;
@@ -99,9 +102,10 @@ export const deleteText = ({
     text: string;
     timestamp: Date;
   };
+  file: string;
   socket: any;
 }) => {
-  socket.emit("insertText", { room, data });
+  socket.emit("deleteText", { room, data, file });
 };
 
 export let toShow = ["HTML", "CSS", "JAVASCRIPT", "OUTPUT"];

@@ -3,7 +3,8 @@ import Editor from "@monaco-editor/react";
 import { FaHtml5, FaCss3 } from "react-icons/fa";
 import { SiJavascript } from "react-icons/si";
 import { CodeSettingsCont } from "../../contexts/CodeSettingsContext";
-import { useContext, useRef } from "react";
+import { useContext } from "react";
+import { CodeCont } from "../../contexts/CodeContext";
 
 const CodeEditor = ({
   theme,
@@ -19,11 +20,28 @@ const CodeEditor = ({
   showMinScreen: string;
 }) => {
   const { setEditorNotMounted } = useContext(CodeSettingsCont);
-  const editorRef = useRef(null);
-  const handleEditorDidMount = (editor: any) => {
+  const {
+    setHTMLCursor,
+    setCSSCursor,
+    setJSCursor,
+    setHTMLEditor,
+    setCSSEditor,
+    setJSEditor,
+  } = useContext(CodeCont);
+  const handleEditorDidMount = async (editor: any) => {
     setEditorNotMounted(false);
-    editorRef.current = editor;
+    if (file.name === "HTML") {
+      setHTMLEditor(editor);
+    }
+    if (file.name === "CSS") {
+      setCSSEditor(editor);
+    }
+    if (file.name === "JS" || file.name === "JAVASCRIPT") {
+      setJSEditor(editor);
+    }
 
+    // editorRef.current = editor;
+    // setEditor(editor);
     editor.onDidChangeCursorPosition(handleCursorPositionChange);
   };
   const handleCursorPositionChange = (e: any) => {
@@ -36,8 +54,15 @@ const CodeEditor = ({
 
     let cursor = { line, column };
 
-    console.log(cursor);
+    if (file.name === "HTML") {
+      setHTMLCursor(cursor);
+    } else if (file.name === "CSS") {
+      setCSSCursor(cursor);
+    } else {
+      setJSCursor(cursor);
+    }
   };
+
   return (
     <div
       className={`md:min-w-[100px] w-full z-0 flex-grow ${
