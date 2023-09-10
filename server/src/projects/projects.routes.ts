@@ -191,7 +191,7 @@ router.post(
     const msg =
       await inviteCollaboration(
         req.params.id,
-        req.body.userId,
+        req.body.user,
         req.user._id,
       );
 

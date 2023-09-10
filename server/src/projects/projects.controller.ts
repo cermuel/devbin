@@ -4,6 +4,7 @@ import { Projects } from "./projects.model";
 import { NotFoundError } from "../errors/not-found.error";
 import { Connections } from "./connect.model";
 import { connectStatus } from "./projects.dto";
+import { UnauthenticatedError } from "../errors";
 
 export const createProject = async (
   name: string,
@@ -108,7 +109,7 @@ export const inviteCollaboration =
       project.owner.toString() !==
       sender._id.toString()
     )
-      throw new Error(
+      throw new UnauthenticatedError(
         "You are not the owner of this project",
       );
 
