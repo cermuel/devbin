@@ -29,7 +29,7 @@ import {
 } from "./projects.dto";
 import { StatusCodes } from "http-status-codes";
 import { validateRequest } from "../middlewares/validate.middleware";
-import { inviteCollabValid } from "./connect.dto";
+import { inviteCollabValid, isValidId } from "./connect.dto";
 
 router
   .route("/")
@@ -109,134 +109,6 @@ router.get(
   },
 );
 
-router
-  .route("/:id")
-  .get(
-    async (
-      req: Request<
-        APIParams,
-        object,
-        Record<string, never>,
-        APIQuery
-      >,
-      res: Response<
-        APIResponse<{
-          project: IProject;
-        }>
-      >,
-    ) => {
-      const project =
-        await getSingleProject(
-          req.params.id,
-        );
-      res.status(StatusCodes.OK).json({
-        msg: "Project fetched Sucessfully",
-        data: { project },
-        statusCode: StatusCodes.OK,
-      });
-    },
-  )
-  .patch(
-    async (
-      req: Request<
-        APIParams,
-        object,
-        IProject
-      >,
-      res: Response<
-        APIResponse<{
-          project: IProject;
-        }>
-      >,
-    ) => {
-      const project =
-        await getSingleProject(
-          req.params.id,
-        );
-      if (
-        project.owner.toString() !==
-        req.user._id.toString()
-      ) {
-        return res
-          .status(
-            StatusCodes.UNAUTHORIZED,
-          )
-          .json({
-            msg: "You are not authorized to update this project",
-            statusCode:
-              StatusCodes.UNAUTHORIZED,
-          });
-      }
-      project.name = req.body.name;
-      await project.save();
-      res.status(StatusCodes.OK).json({
-        msg: "Project updated Sucessfully",
-        data: { project },
-        statusCode: StatusCodes.OK,
-      });
-    },
-  );
-
-router.post(
-  "/:id/invite",
-  validateRequest({
-    body: inviteCollabValid
-  }),
-  async (
-    req: Request<
-      APIParams,
-      object,
-      Record<string, never>,
-      APIQuery
-    >,
-    res: Response<
-      APIResponse<{ project: IProject }>
-    >,
-  ) => {
-    const msg =
-      await inviteCollaboration(
-        req.params.id,
-        req.body.user,
-        req.user._id,
-      );
-
-    return res
-      .status(StatusCodes.OK)
-      .json({
-        msg,
-        statusCode: StatusCodes.OK,
-      });
-  },
-);
-
-router.post(
-  "/:id/request",
-  async (
-    req: Request<
-      APIParams,
-      object,
-      Record<string, never>,
-      APIQuery
-    >,
-    res: Response<
-      APIResponse<{ project: IProject }>
-    >,
-  ) => {
-    const msg =
-      await requestCollaboration(
-        req.params.id,
-        req.user._id,
-      );
-
-    return res
-      .status(StatusCodes.OK)
-      .json({
-        msg,
-        statusCode: StatusCodes.OK,
-      });
-  },
-);
-
 router.get(
   "/requests",
   async (
@@ -297,8 +169,144 @@ router.get(
   },
 );
 
+
+
+router
+  .route("/:id",)
+  .get(
+    validateRequest({params: isValidId}),
+    async (
+      req: Request<
+        APIParams,
+        object,
+        Record<string, never>,
+        APIQuery
+      >,
+      res: Response<
+        APIResponse<{
+          project: IProject;
+        }>
+      >,
+    ) => {
+      const project =
+        await getSingleProject(
+          req.params.id,
+        );
+      res.status(StatusCodes.OK).json({
+        msg: "Project fetched Sucessfully",
+        data: { project },
+        statusCode: StatusCodes.OK,
+      });
+    },
+  )
+  .patch(
+    validateRequest({params: isValidId}),
+    async (
+      req: Request<
+        APIParams,
+        object,
+        IProject
+      >,
+      res: Response<
+        APIResponse<{
+          project: IProject;
+        }>
+      >,
+    ) => {
+      const project =
+        await getSingleProject(
+          req.params.id,
+        );
+      if (
+        project.owner.toString() !==
+        req.user._id.toString()
+      ) {
+        return res
+          .status(
+            StatusCodes.UNAUTHORIZED,
+          )
+          .json({
+            msg: "You are not authorized to update this project",
+            statusCode:
+              StatusCodes.UNAUTHORIZED,
+          });
+      }
+      project.name = req.body.name;
+      await project.save();
+      res.status(StatusCodes.OK).json({
+        msg: "Project updated Sucessfully",
+        data: { project },
+        statusCode: StatusCodes.OK,
+      });
+    },
+  );
+
+router.post(
+  "/:id/invite",
+  validateRequest({
+    body: inviteCollabValid,
+    params: isValidId
+
+  }),
+  async (
+    req: Request<
+      APIParams,
+      object,
+      Record<string, never>,
+      APIQuery
+    >,
+    res: Response<
+      APIResponse<{ project: IProject }>
+    >,
+  ) => {
+    const msg =
+      await inviteCollaboration(
+        req.params.id,
+        req.body.user,
+        req.user._id,
+      );
+
+    return res
+      .status(StatusCodes.OK)
+      .json({
+        msg,
+        statusCode: StatusCodes.OK,
+      });
+  },
+);
+
+router.post(
+  "/:id/request",
+  validateRequest({params: isValidId}),
+  async (
+    req: Request<
+      APIParams,
+      object,
+      Record<string, never>,
+      APIQuery
+    >,
+    res: Response<
+      APIResponse<{ project: IProject }>
+    >,
+  ) => {
+    const msg =
+      await requestCollaboration(
+        req.params.id,
+        req.user._id,
+      );
+
+    return res
+      .status(StatusCodes.OK)
+      .json({
+        msg,
+        statusCode: StatusCodes.OK,
+      });
+  },
+);
+
 router.post(
   "/invite/:id/respond",
+  validateRequest({params: isValidId}),
   async (
     req: Request<
       APIParams,
@@ -324,6 +332,7 @@ router.post(
 
 router.post(
   "/request/:id/respond",
+  validateRequest({params: isValidId}),
   async (
     req: Request<
       APIParams,

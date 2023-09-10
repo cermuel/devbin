@@ -5,6 +5,7 @@ import { NotFoundError } from "../errors/not-found.error";
 import { Connections } from "./connect.model";
 import { connectStatus } from "./projects.dto";
 import { UnauthenticatedError } from "../errors";
+import { Users } from "../users/users.model";
 
 export const createProject = async (
   name: string,
@@ -113,6 +114,16 @@ export const inviteCollaboration =
         "You are not the owner of this project",
       );
 
+      const user = await Users.findById(receipient)
+
+      if (!user)
+        throw new NotFoundError("User not found")
+
+      const oldCon = await Connections.findOne({receipient, project: project._id})
+      if (oldCon){
+        return `User ${receipient} has already been sent an invite to project ${project._id} and it is ${oldCon.status}`
+      }  
+
     // create connection
     const connection =
       await Connections.create({
@@ -136,6 +147,11 @@ export const requestCollaboration =
       throw new NotFoundError(
         "Project not found",
       );
+
+      const oldCon = await Connections.findOne({project: project._id, sender})
+      if (oldCon){
+        return `You have already sent a request to project ${project._id} and it is ${oldCon.status}`
+      }
 
     // create connection
     const connection =
