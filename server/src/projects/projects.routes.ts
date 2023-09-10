@@ -28,6 +28,8 @@ import {
   IProject,
 } from "./projects.dto";
 import { StatusCodes } from "http-status-codes";
+import { validateRequest } from "../middlewares/validate.middleware";
+import { inviteCollabValid } from "./connect.dto";
 
 router
   .route("/")
@@ -177,6 +179,9 @@ router
 
 router.post(
   "/:id/invite",
+  validateRequest({
+    body: inviteCollabValid
+  }),
   async (
     req: Request<
       APIParams,
