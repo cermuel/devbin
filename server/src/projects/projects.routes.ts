@@ -29,7 +29,10 @@ import {
 } from "./projects.dto";
 import { StatusCodes } from "http-status-codes";
 import { validateRequest } from "../middlewares/validate.middleware";
-import { inviteCollabValid, isValidId } from "./connect.dto";
+import {
+  inviteCollabValid,
+  isValidId,
+} from "./connect.dto";
 
 router
   .route("/")
@@ -169,12 +172,12 @@ router.get(
   },
 );
 
-
-
 router
-  .route("/:id",)
+  .route("/:id")
   .get(
-    validateRequest({params: isValidId}),
+    validateRequest({
+      params: isValidId,
+    }),
     async (
       req: Request<
         APIParams,
@@ -200,7 +203,9 @@ router
     },
   )
   .patch(
-    validateRequest({params: isValidId}),
+    validateRequest({
+      params: isValidId,
+    }),
     async (
       req: Request<
         APIParams,
@@ -245,8 +250,7 @@ router.post(
   "/:id/invite",
   validateRequest({
     body: inviteCollabValid,
-    params: isValidId
-
+    params: isValidId,
   }),
   async (
     req: Request<
@@ -277,7 +281,9 @@ router.post(
 
 router.post(
   "/:id/request",
-  validateRequest({params: isValidId}),
+  validateRequest({
+    params: isValidId,
+  }),
   async (
     req: Request<
       APIParams,
@@ -306,7 +312,9 @@ router.post(
 
 router.post(
   "/invite/:id/respond",
-  validateRequest({params: isValidId}),
+  validateRequest({
+    params: isValidId,
+  }),
   async (
     req: Request<
       APIParams,
@@ -332,7 +340,9 @@ router.post(
 
 router.post(
   "/request/:id/respond",
-  validateRequest({params: isValidId}),
+  validateRequest({
+    params: isValidId,
+  }),
   async (
     req: Request<
       APIParams,

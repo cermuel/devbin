@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavTwo from "../components/shared/code/NavTwo";
 import { getMe } from "../functions/user";
@@ -12,6 +12,8 @@ import {
 } from "../functions/project";
 import Projects from "../components/shared/code/Projects";
 import Loading from "../components/shared/code/Loading";
+import { IoMdCheckbox, IoMdClose } from "react-icons/io";
+import { BsCheck } from "react-icons/bs";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -34,9 +36,10 @@ const Profile = () => {
     projectRequests({ setRequests });
     InvitesSent({ setInvites });
   }, []);
+
   const [active, setActive] = useState("My Projects");
 
-  const tabs = ["My Projects", "Invites Sent", "Project Requests"];
+  const tabs = ["My Projects", "Project Requests", "Invites Sent"];
   return (
     <main className="w-screen h-screen overflow-hidden bg-black">
       {(userLoading || projectsLoading) && <Loading />}
@@ -60,7 +63,7 @@ const Profile = () => {
             return (
               <h1
                 onClick={() => setActive(tab)}
-                className={`sm:text-5xl mb-4 sm:pt-10 text-sm font-bold text-white w-[33%] text-center ${
+                className={`lg:text-5xl md:text-3xl sm:text-2xl cursor-pointer mb-4 sm:pt-10 text-sm font-bold text-white w-[33%] text-center ${
                   active == tab && "underline"
                 } `}
               >
@@ -70,44 +73,111 @@ const Profile = () => {
           })}
         </div>
         <section className="flex-grow max-h-[92%] gap-8 flex flex-wrap w-full justify-around p-4 px-6 overflow-scroll">
-          {projects && projects?.length > 0 ? (
-            filteredProjects.length > 0 ? (
-              filteredProjects?.map((project: any, i: number) => {
-                return (
-                  <Projects
-                    owner={project.owner}
-                    html={project?.files[0].text}
-                    css={project?.files[1].text}
-                    js={project?.files[2].text}
-                    key={i}
-                    projectName={project?.name}
-                    id={project._id}
-                  />
-                );
-              })
+          {active == tabs[0] ? (
+            projects && projects?.length > 0 ? (
+              filteredProjects.length > 0 ? (
+                filteredProjects?.map((project: any, i: number) => {
+                  return (
+                    <Projects
+                      owner={project.owner}
+                      html={project?.files[0].text}
+                      css={project?.files[1].text}
+                      js={project?.files[2].text}
+                      key={i}
+                      projectName={project?.name}
+                      id={project._id}
+                    />
+                  );
+                })
+              ) : (
+                <div>
+                  <p className="text-2xl font-bold mb-1 text-white">
+                    Project not found
+                  </p>
+                </div>
+              )
             ) : (
-              <div>
+              <div className="w-full h-full flex-col flex justify-center items-center">
                 <p className="text-2xl font-bold mb-1 text-white">
-                  Project not found
+                  There are 0 projects
+                </p>
+                <div className="flex flex-wrap gap-4 justify-center">
+                  <button
+                    onClick={() => {
+                      navigate("/code/bin/new");
+                    }}
+                    className="bg-pry text-white rounded-sm py-2 px-6"
+                  >
+                    Create One
+                  </button>
+                </div>
+              </div>
+            )
+          ) : active == tabs[1] ? (
+            requests.length > 0 ? (
+              <>
+                <div className="w-full">
+                  <section className="text-white bg-pry w-full border-b-[1px] max-sm:text-sm font-medium flex text-xl justify-between">
+                    <div className="flex w-[35%] px-1 py-2">Project Name</div>
+                    <div className="flex w-[30%] px-1 py-2">Owner</div>
+                    <div className="flex w-[20%] px-1 py-2">Status</div>
+                    <div className="flex w-[15%] px-1 py-2 justify-center">
+                      Action
+                    </div>
+                  </section>
+
+                  {requests.map((request: any) => {
+                    // console.log(request);
+                    return (
+                      <section className="text-white w-full border-b-2 max-md:text-sm max-md:font-medium flex justify-between">
+                        <div className="flex w-[35%] py-3 px-2">
+                          Project Name
+                        </div>
+                        <div className="flex w-[30%] py-3 px-2">Owner</div>
+                        <div className="flex w-[20%] py-3 px-2 capitalize text-xs sm:text-sm">
+                          {request.status}
+                        </div>
+                        <div className="flex w-[15%] py-3 px-2 justify-center max-sm:text-base text-xl gap-2">
+                          <button className="text-green-300">
+                            <BsCheck />
+                          </button>
+                          <button className="text-red-500">
+                            <IoMdClose />
+                          </button>
+                        </div>
+                      </section>
+                    );
+                  })}
+                </div>
+              </>
+            ) : (
+              <div className="w-full h-full flex-col flex justify-center items-center">
+                <p className="text-2xl font-bold mb-1 text-white">
+                  You have 0 Requests
                 </p>
               </div>
             )
           ) : (
-            <div className="w-full h-full flex-col flex justify-center items-center">
-              <p className="text-2xl font-bold mb-1 text-white">
-                There are 0 projects
-              </p>
-              <div className="flex flex-wrap gap-4 justify-center">
-                <button
-                  onClick={() => {
-                    navigate("/code/bin/new");
-                  }}
-                  className="bg-pry text-white rounded-sm py-2 px-6"
-                >
-                  Create One
-                </button>
-              </div>
-            </div>
+            <>
+              {invites.length > 0 ? (
+                <>
+                  {console.log(invites)}
+                  <h1>All Sent Invites</h1>
+                </>
+              ) : (
+                <div className="w-full h-full flex-col flex justify-center items-center">
+                  <p className="text-2xl font-bold mb-1 text-white">
+                    You Have Sent 0 Invites
+                  </p>
+                  <button
+                    onClick={() => setActive(tabs[0])}
+                    className="bg-[#737cde] text-white px-4 py-2 text-sm font-medium rounded-sm"
+                  >
+                    Go To Projects
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </section>
       </section>

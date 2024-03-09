@@ -134,6 +134,10 @@ export const getAllProjects = async ({
     console.log(err);
     let message =
       err?.response.data?.msg || err?.message || `An error occurred`;
+    if (message == "Unauthorized") {
+      localStorage.removeItem("devbin_token");
+      window.location.pathname = "/auth/login";
+    }
     toast.error(message);
   }
 };
@@ -182,9 +186,10 @@ export const Collab = async ({
   setLoading(true);
   if (projectID && userId) {
     try {
+      console.log(projectID);
       let updatedProject = await axios.post(
-        `${BASEURL}projects/${projectID}/collab`,
-        { userId },
+        `${BASEURL}projects/${projectID}/invite`,
+        { user: userId },
         {
           headers: { Authorization: `${TOKEN}` },
         }
@@ -210,11 +215,12 @@ export const InvitesSent = async ({
   setInvites: Dispatch<any[]>;
 }) => {
   try {
-    let invites = await axios.get(`${BASEURL}projects/invites`, {
+    let invites = await axios.get(`${BASEURL}projects/requests`, {
       headers: { Authorization: `${TOKEN}` },
     });
 
-    setInvites(invites?.data?.data?.projects);
+    setInvites(invites?.data?.data?.requests);
+
     // setLoading(false);
   } catch (err: any) {
     // setLoading(false);
@@ -231,11 +237,10 @@ export const projectRequests = async ({
   setRequests: Dispatch<any[]>;
 }) => {
   try {
-    let requests = await axios.get(`${BASEURL}projects/requests`, {
+    let requests = await axios.get(`${BASEURL}projects/invites`, {
       headers: { Authorization: `${TOKEN}` },
     });
-
-    setRequests(requests?.data?.data?.projects);
+    setRequests(requests?.data?.data?.invites);
   } catch (err: any) {
     console.log(err);
     let message =

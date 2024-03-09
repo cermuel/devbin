@@ -17,6 +17,7 @@ import {
   save,
   toShow,
 } from "../utils/ProjectUtils";
+import toast, { Toaster } from "react-hot-toast";
 
 const Code = () => {
   const navigate = useNavigate();
@@ -52,29 +53,31 @@ const Code = () => {
     CSSID: "",
     JSID: "",
   });
+
   const [loading, setLoading] = useState<boolean>(false);
   const [showMinScreen, setshowMinScreen] = useState<string>("HTML");
 
   //
   //effects
   useLayoutEffect(() => {
+    const toSend = {
+      id: activeID,
+      setHTML,
+      setCSS,
+      setJS,
+      setLoading,
+      setCodeName,
+      setFilesID,
+    };
     isAuth(navigate);
-    activeID !== "" &&
-      getProject({
-        id: activeID,
-        setHTML,
-        setCSS,
-        setJS,
-        setLoading,
-        setCodeName,
-        setFilesID,
-      });
+    activeID !== "" && getProject(toSend);
   }, []);
 
   useEffect(() => {
     setLive(live);
     handleJoin({ live, socket, activeID, setLiveError });
   }, [live]);
+
   useEffect(() => {
     localStorage.setItem("HTML", HTML);
     live == true &&
@@ -163,79 +166,94 @@ const Code = () => {
     },
   ];
 
-  if (activeID && activeID !== "") {
+  if (!navigator.onLine) {
     return (
-      <CodeLayout
-        toShow={toShow}
-        setShowMinScreen={setshowMinScreen}
-        showMinScreen={showMinScreen}
-      >
-        {editorNotMounted && <Loading />}
-        <>
-          <section
-            className={`w-screend flex gap-1 bg-pry overflow-hidden h-[50%] ${
-              showMinScreen === toShow[3] && "max-md:hidden"
-            }`}
-          >
-            {editors.map((file: any, i: number) => {
-              return (
-                <CodeEditor
-                  key={i}
-                  showMinScreen={showMinScreen}
-                  toShow={toShow}
-                  file={file}
-                  fontSize={fontSize}
-                  theme={theme}
-                />
-              );
-            })}
-          </section>
-          <section
-            className={`w-screen h-[50%] ${
-              showMinScreen === toShow[3] ? "max-md:h-full" : "max-md:h-[50%"
-            }`}
-          >
-            <HTMLRenderer html={HTML} css={CSS} js={JS} />
-          </section>
-        </>
-      </CodeLayout>
+      <div className="w-full h-screen flex flex-col justify-center items-center">
+        <h1 className="text-xl mb-2">Please Go Online To Continue</h1>
+        <button
+          onClick={() => window.location.reload()}
+          className="bg-[#737cde] text-white px-4 py-2 text-sm font-medium rounded-sm"
+        >
+          Retry
+        </button>
+      </div>
     );
-  } else if (loading) {
-    return <Loading />;
   } else {
-    return (
-      <CodeLayout
-        toShow={toShow}
-        setShowMinScreen={setshowMinScreen}
-        showMinScreen={showMinScreen}
-      >
-        <>
-          <div className="w-full h-full flex-col flex justify-center items-center">
-            <p className="text-2xl font-bold mb-1">
-              You have 0 active projects
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <button
-                onClick={() => {
-                  navigate("/code/profile");
-                }}
-                className="bg-pry text-white rounded-sm py-2 px-6"
-              >
-                My Projects
-              </button>
-              <button
-                onClick={() => {
-                  navigate("/code/bin/new");
-                }}
-                className="bg-pry text-white rounded-sm py-2 px-6"
-              >
-                Create One
-              </button>
+    if (activeID && activeID !== "") {
+      return (
+        <CodeLayout
+          toShow={toShow}
+          setShowMinScreen={setshowMinScreen}
+          showMinScreen={showMinScreen}
+        >
+          {editorNotMounted && <Loading />}
+          <>
+            <section
+              className={`w-screend flex gap-1 bg-pry overflow-hidden h-[50%] ${
+                showMinScreen === toShow[3] && "max-md:hidden"
+              }`}
+            >
+              {editors.map((file: any, i: number) => {
+                return (
+                  <CodeEditor
+                    key={i}
+                    showMinScreen={showMinScreen}
+                    toShow={toShow}
+                    file={file}
+                    fontSize={fontSize}
+                    theme={theme}
+                  />
+                );
+              })}
+            </section>
+            <section
+              className={`w-screen h-[50%] ${
+                showMinScreen === toShow[3] ? "max-md:h-full" : "max-md:h-[50%"
+              }`}
+            >
+              <HTMLRenderer html={HTML} css={CSS} js={JS} />
+            </section>
+          </>
+        </CodeLayout>
+      );
+    } else if (loading) {
+      return <Loading />;
+    } else {
+      return (
+        <CodeLayout
+          toShow={toShow}
+          setShowMinScreen={setshowMinScreen}
+          showMinScreen={showMinScreen}
+        >
+          <div className="border-8">
+            <Toaster />
+            <div className="w-full h-full flex-col flex justify-center items-center">
+              <p className="text-2xl font-bold mb-1">
+                You have 0 active projects
+              </p>
+              <div className="flex flex-wrap gap-4 justify-center">
+                <button
+                  onClick={() => {
+                    navigate("/code/profile");
+                  }}
+                  className="bg-pry text-white rounded-sm py-2 px-6"
+                >
+                  My Projects
+                </button>
+                <button
+                  onClick={() => {
+                    navigate("/code/bin/new");
+                  }}
+                  className="bg-pry text-white rounded-sm py-2 px-6"
+                >
+                  Create One
+                </button>
+              </div>
             </div>
           </div>
-        </>
-      </CodeLayout>
-    );
+        </CodeLayout>
+      );
+    }
   }
 };
 

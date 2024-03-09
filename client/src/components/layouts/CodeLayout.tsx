@@ -12,6 +12,11 @@ const CodeLayout = ({
   toShow: string[];
   showMinScreen: string;
 }) => {
+  // document.addEventListener("keydown", function (event) {
+  //   if ((event.ctrlKey || event.metaKey) && event.key === "w") {
+  //     console.log("ctrl + w");
+  //   }
+  // });
   return (
     <main className="w-screen h-screen">
       <Navbar
