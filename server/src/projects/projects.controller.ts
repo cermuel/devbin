@@ -1,5 +1,5 @@
 import { APIQuery } from "../types";
-import { createFiles } from "../files/files.controller";
+import { createFiles, updateFile } from "../files/files.controller";
 import { Projects } from "./projects.model";
 import { NotFoundError } from "../errors/not-found.error";
 import { Connections } from "./connect.model";
@@ -25,6 +25,7 @@ export const createProject = async (
   );
   return project;
 };
+
 
 export const getMyProjects = async (
   query: APIQuery,
@@ -173,7 +174,7 @@ export const getCollaborationRequests =
       await Connections.find({
         receipient: user._id,
         type: "request",
-      }).populate("sender", "project");
+      }).populate([{path: "project", select: "name"}, {path: "sender", select: "firstName lastName email"}, {path: "receipient", select: "firstName lastName email"}]);
     return requests;
   };
 
@@ -183,7 +184,27 @@ export const getCollaborationInvites =
       await Connections.find({
         receipient: user._id,
         type: "invite",
-      }).populate("sender", "project");
+      }).populate([{path: "project", select: "name"}, {path: "sender", select: "firstName lastName email"}, {path: "receipient", select: "firstName lastName email"}]);
+    return invites;
+  };
+
+  export const getSentCollaborationRequests =
+  async (user) => {
+    const requests =
+      await Connections.find({
+        sender: user._id,
+        type: "request",
+      }).populate([{path: "project", select: "name"}, {path: "sender", select: "firstName lastName email"}, {path: "receipient", select: "firstName lastName email"}]);
+    return requests;
+  };
+
+export const getSentCollaborationInvites =
+  async (user) => {
+    const invites =
+      await Connections.find({
+        sender: user._id,
+        type: "invite",
+      }).populate([{path: "project", select: "name"}, {path: "sender", select: "firstName lastName email"}, {path: "receipient", select: "firstName lastName email"}]);
     return invites;
   };
 
@@ -274,3 +295,4 @@ export const respondToRequest = async (
 
   return "Response sent successfully";
 };
+

@@ -12,6 +12,8 @@ import {
   getCollaborationInvites,
   getCollaborationRequests,
   getMyProjects,
+  getSentCollaborationInvites,
+  getSentCollaborationRequests,
   getSingleProject,
   inviteCollaboration,
   requestCollaboration,
@@ -113,6 +115,36 @@ router.get(
 );
 
 router.get(
+  "/invites",
+  async (
+    req: Request<
+      APIParams,
+      object,
+      Record<string, never>,
+      APIQuery
+    >,
+    res: Response<
+      APIResponse<{
+        requests: IConnection[];
+      }>
+    >,
+  ) => {
+    const requests =
+      await getCollaborationInvites(
+        req.user,
+      );
+
+    return res
+      .status(StatusCodes.OK)
+      .json({
+        msg: "Requests fetched Sucessfully",
+        data: { requests },
+        statusCode: StatusCodes.OK,
+      });
+  },
+);
+
+router.get(
   "/requests",
   async (
     req: Request<
@@ -143,7 +175,37 @@ router.get(
 );
 
 router.get(
-  "/invites",
+  "/requestsent",
+  async (
+    req: Request<
+      APIParams,
+      object,
+      Record<string, never>,
+      APIQuery
+    >,
+    res: Response<
+      APIResponse<{
+        requests: IConnection[];
+      }>
+    >,
+  ) => {
+    const requests =
+      await getSentCollaborationRequests(
+        req.user,
+      );
+
+    return res
+      .status(StatusCodes.OK)
+      .json({
+        msg: "Sent Requests fetched Sucessfully",
+        data: { requests },
+        statusCode: StatusCodes.OK,
+      });
+  },
+);
+
+router.get(
+  "/invitesent",
   async (
     req: Request<
       APIParams,
@@ -158,14 +220,14 @@ router.get(
     >,
   ) => {
     const invites =
-      await getCollaborationInvites(
+      await getSentCollaborationInvites(
         req.user,
       );
 
     return res
       .status(StatusCodes.OK)
       .json({
-        msg: "Invites fetched Sucessfully",
+        msg: "Sent Invites fetched Sucessfully",
         data: { invites },
         statusCode: StatusCodes.OK,
       });
