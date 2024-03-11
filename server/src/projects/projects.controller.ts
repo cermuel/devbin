@@ -211,7 +211,7 @@ export const getSentCollaborationInvites =
 export const respondToInvite = async (
   id: string,
   response: connectStatus,
-  userId,
+  user,
 ) => {
   const connection =
     await Connections.findById(id);
@@ -233,7 +233,7 @@ export const respondToInvite = async (
 
   if (
     connection.receipient.toString() !==
-    userId.toString()
+    user._id.toString()
   )
     throw new Error(
       "You are not the receipient of this connection",
@@ -255,7 +255,7 @@ export const respondToInvite = async (
 export const respondToRequest = async (
   id: string,
   response: connectStatus,
-  userId,
+  user,
 ) => {
   const connection =
     await Connections.findById(id);
@@ -277,7 +277,7 @@ export const respondToRequest = async (
 
   if (
     connection.receipient.toString() !==
-    userId.toString()
+    user._id.toString()
   )
     throw new Error(
       "You are not the receipient of this connection",
