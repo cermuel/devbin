@@ -29,3 +29,8 @@ export type insertTextType = {
   timestamp: Date;
   file: string;
 };
+
+export enum RespondInvite {
+  accepted = "accepted",
+  rejected = "rejected",
+}

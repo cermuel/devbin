@@ -166,7 +166,7 @@ const Code = () => {
     },
   ];
 
-  if (!navigator.onLine) {
+  if (navigator.onLine) {
     return (
       <div className="w-full h-screen flex flex-col justify-center items-center">
         <h1 className="text-xl mb-2">Please Go Online To Continue</h1>

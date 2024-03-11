@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NavTwo from "../components/shared/code/NavTwo";
 import { getMe } from "../functions/user";
 import { isAuth } from "../utils/CodeUtils";
@@ -7,6 +7,8 @@ import { isAuth } from "../utils/CodeUtils";
 import userIMG from "../assets/main.jpeg";
 import {
   InvitesSent,
+  acceptRequest,
+  declineRequest,
   getMyProjects,
   projectRequests,
 } from "../functions/project";
@@ -31,7 +33,15 @@ const Profile = () => {
   useLayoutEffect(() => {
     isAuth(navigate);
 
-    getMe({ setLoading: setUserLoading, setUser });
+    setUserLoading(true);
+    let user: any = localStorage.getItem("devbin_user");
+
+    if (user !== null || undefined) {
+      user = JSON.parse(user);
+      setUserLoading(false);
+      setUser(user);
+    }
+
     getMyProjects({ setLoading: setProjectsLoading, setProjects });
     projectRequests({ setRequests });
     InvitesSent({ setInvites });
@@ -127,21 +137,37 @@ const Profile = () => {
                   </section>
 
                   {requests.map((request: any) => {
-                    // console.log(request);
+                    console.log(request);
                     return (
                       <section className="text-white w-full border-b-2 max-md:text-sm max-md:font-medium flex justify-between">
-                        <div className="flex w-[35%] py-3 px-2">
-                          Project Name
+                        <div className="flex w-[35%] py-3 px-2 capitalize">
+                          {request.project.name}
                         </div>
-                        <div className="flex w-[30%] py-3 px-2">Owner</div>
+                        <div className="flex w-[30%] cursor-pointer hover:underline py-3 px-2">
+                          <Link
+                            to={`/code/profile/${request.sender._id}`}
+                            target="blank"
+                          >
+                            {request.sender.firstName +
+                              " " +
+                              request.sender?.lastName}
+                          </Link>
+                        </div>
                         <div className="flex w-[20%] py-3 px-2 capitalize text-xs sm:text-sm">
                           {request.status}
                         </div>
                         <div className="flex w-[15%] py-3 px-2 justify-center max-sm:text-base text-xl gap-2">
-                          <button className="text-green-300">
+                          <button
+                            className="text-green-300"
+                            onClick={() => acceptRequest({ id: request._id })}
+                          >
                             <BsCheck />
                           </button>
-                          <button className="text-red-500">
+
+                          <button
+                            className="text-red-500"
+                            onClick={() => declineRequest({ id: request._id })}
+                          >
                             <IoMdClose />
                           </button>
                         </div>

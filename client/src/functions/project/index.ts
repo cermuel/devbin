@@ -1,6 +1,10 @@
 import { toast } from "react-hot-toast";
 import axios from "axios";
-import { FileID, projectType } from "../../types/functions/project";
+import {
+  FileID,
+  RespondInvite,
+  projectType,
+} from "../../types/functions/project";
 import { Dispatch } from "react";
 import { NavigateFunction } from "react-router-dom";
 
@@ -134,7 +138,7 @@ export const getAllProjects = async ({
     console.log(err);
     let message =
       err?.response.data?.msg || err?.message || `An error occurred`;
-    if (message == "Unauthorized") {
+    if (message === "Unauthorized") {
       localStorage.removeItem("devbin_token");
       window.location.pathname = "/auth/login";
     }
@@ -240,7 +244,45 @@ export const projectRequests = async ({
     let requests = await axios.get(`${BASEURL}projects/invites`, {
       headers: { Authorization: `${TOKEN}` },
     });
-    setRequests(requests?.data?.data?.invites);
+    setRequests(requests?.data?.data?.requests);
+  } catch (err: any) {
+    console.log(err);
+    let message =
+      err?.response.data?.msg || err?.message || `An error occurred`;
+    toast.error(message);
+  }
+};
+
+export const acceptRequest = async ({ id }: { id: string }) => {
+  try {
+    let accept = await axios.post(
+      `${BASEURL}projects/invite/${id}/respond`,
+      { response: RespondInvite.accepted },
+      {
+        headers: { Authorization: `${TOKEN}` },
+      }
+    );
+    console.log(accept.data);
+    toast.success("Request Accepted");
+  } catch (err: any) {
+    console.log(err);
+    let message =
+      err?.response.data?.msg || err?.message || `An error occurred`;
+    toast.error(message);
+  }
+};
+
+export const declineRequest = async ({ id }: { id: string }) => {
+  try {
+    let accept = await axios.post(
+      `${BASEURL}projects/invite/${id}/respond`,
+      { response: RespondInvite.rejected },
+      {
+        headers: { Authorization: `${TOKEN}` },
+      }
+    );
+    console.log(accept.data);
+    toast.success("Request Accepted");
   } catch (err: any) {
     console.log(err);
     let message =
