@@ -36,7 +36,7 @@ export const updateFile = async (id: string, file: IFile) => {
 };
 
 export const updateFileContent = async (id: string, content: string) => {
-	const updatedFile = await Files.findByIdAndUpdate(id, {content}, {
+	const updatedFile = await Files.findByIdAndUpdate(id, {text: content}, {
 		new: true,
 	});
 	return updatedFile;
