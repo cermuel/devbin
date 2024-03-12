@@ -166,7 +166,7 @@ export default (io: Server) => {
 
       socket.on(
         "deleteText",
-        ({ room, data, file }) => {
+        ({ room, data, file, fileType }) => {
           const text = data.text;
           const cursorPosition =
             data.cursorPosition;
@@ -181,13 +181,14 @@ export default (io: Server) => {
               cursorPosition,
               timestamp,
               file,
+              fileType
             });
         },
       );
 
       socket.on(
         "insertText",
-        ({ room, data, file }) => {
+        ({ room, data, file, fileType }) => {
           const text = data.text;
           const cursorPosition =
             data.cursorPosition;
@@ -202,6 +203,7 @@ export default (io: Server) => {
               cursorPosition,
               timestamp,
               file,
+              fileType
             });
         },
       );
