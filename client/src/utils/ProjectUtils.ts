@@ -1,17 +1,21 @@
 import { Dispatch } from "react";
 import { NavigateFunction } from "react-router-dom";
+import { handleSession } from "../contexts/CodeContext";
 
 export const selectProject = ({
   id,
   setactiveID,
   navigate,
+  owner,
 }: {
   id: string;
   setactiveID: Dispatch<string>;
   navigate: NavigateFunction;
+  owner: string;
 }) => {
   setactiveID(id);
   navigate("/code/bin");
+  localStorage.setItem("active_owner", owner);
 };
 
 export const handleSucessError = (socket: any) => {
@@ -35,6 +39,7 @@ export const handleJoin = ({
   setLiveError: Dispatch<string>;
   activeID: string;
 }) => {
+  handleSession();
   live ? socket.emit("join", activeID) : socket.emit("leave", activeID);
   socket.on("error", (data: string) => {
     if (data === "You are not a collaborator") {
@@ -42,8 +47,9 @@ export const handleJoin = ({
     }
   });
   socket.on("success", (data: string) => {
-    if (data === "Joined successfully") {
-      setLiveError(data);
+    console.log(data);
+    if (data === "successfully") {
+      setLiveError("Joined Successfully!");
     }
   });
 };

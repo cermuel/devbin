@@ -1,5 +1,5 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useLayoutEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NavTwo from "../components/shared/code/NavTwo";
 import { getMe } from "../functions/user";
 import { isAuth } from "../utils/CodeUtils";
@@ -7,15 +7,15 @@ import { isAuth } from "../utils/CodeUtils";
 import userIMG from "../assets/main.jpeg";
 import {
   InvitesSent,
-  acceptRequest,
-  declineRequest,
   getMyProjects,
   projectRequests,
 } from "../functions/project";
 import Projects from "../components/shared/code/Projects";
 import Loading from "../components/shared/code/Loading";
-import { IoMdCheckbox, IoMdClose } from "react-icons/io";
-import { BsCheck } from "react-icons/bs";
+import Request from "../components/profile/Request";
+import RequestHeader from "../components/profile/RequestHeader";
+import InvitesHeader from "../components/profile/InvitesHeader";
+import Invite from "../components/profile/Invite";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -26,30 +26,28 @@ const Profile = () => {
   const [query, setQuery] = useState<string>("");
   const [requests, setRequests] = useState<any[]>([]);
   const [invites, setInvites] = useState<any[]>([]);
+
   let filteredProjects = projects.filter((project: any) => {
     return project.name.toLowerCase().includes(query.toLowerCase());
   });
 
   useLayoutEffect(() => {
     isAuth(navigate);
-
     setUserLoading(true);
     let user: any = localStorage.getItem("devbin_user");
-
     if (user !== null || undefined) {
       user = JSON.parse(user);
       setUserLoading(false);
       setUser(user);
     }
-
     getMyProjects({ setLoading: setProjectsLoading, setProjects });
     projectRequests({ setRequests });
     InvitesSent({ setInvites });
   }, []);
 
   const [active, setActive] = useState("My Projects");
+  const tabs = ["My Projects", "Project Requests", "Invites Received"];
 
-  const tabs = ["My Projects", "Project Requests", "Invites Sent"];
   return (
     <main className="w-screen h-screen overflow-hidden bg-black">
       {(userLoading || projectsLoading) && <Loading />}
@@ -127,52 +125,9 @@ const Profile = () => {
             requests.length > 0 ? (
               <>
                 <div className="w-full">
-                  <section className="text-white bg-pry w-full border-b-[1px] max-sm:text-sm font-medium flex text-xl justify-between">
-                    <div className="flex w-[35%] px-1 py-2">Project Name</div>
-                    <div className="flex w-[30%] px-1 py-2">Owner</div>
-                    <div className="flex w-[20%] px-1 py-2">Status</div>
-                    <div className="flex w-[15%] px-1 py-2 justify-center">
-                      Action
-                    </div>
-                  </section>
-
+                  <RequestHeader />
                   {requests.map((request: any) => {
-                    console.log(request);
-                    return (
-                      <section className="text-white w-full border-b-2 max-md:text-sm max-md:font-medium flex justify-between">
-                        <div className="flex w-[35%] py-3 px-2 capitalize">
-                          {request.project.name}
-                        </div>
-                        <div className="flex w-[30%] cursor-pointer hover:underline py-3 px-2">
-                          <Link
-                            to={`/code/profile/${request.sender._id}`}
-                            target="blank"
-                          >
-                            {request.sender.firstName +
-                              " " +
-                              request.sender?.lastName}
-                          </Link>
-                        </div>
-                        <div className="flex w-[20%] py-3 px-2 capitalize text-xs sm:text-sm">
-                          {request.status}
-                        </div>
-                        <div className="flex w-[15%] py-3 px-2 justify-center max-sm:text-base text-xl gap-2">
-                          <button
-                            className="text-green-300"
-                            onClick={() => acceptRequest({ id: request._id })}
-                          >
-                            <BsCheck />
-                          </button>
-
-                          <button
-                            className="text-red-500"
-                            onClick={() => declineRequest({ id: request._id })}
-                          >
-                            <IoMdClose />
-                          </button>
-                        </div>
-                      </section>
-                    );
+                    return <Request request={request} />;
                   })}
                 </div>
               </>
@@ -187,8 +142,12 @@ const Profile = () => {
             <>
               {invites.length > 0 ? (
                 <>
-                  {console.log(invites)}
-                  <h1>All Sent Invites</h1>
+                  <div className="w-full">
+                    <InvitesHeader />
+                    {invites.map((invite: any) => (
+                      <Invite invite={invite} />
+                    ))}
+                  </div>
                 </>
               ) : (
                 <div className="w-full h-full flex-col flex justify-center items-center">

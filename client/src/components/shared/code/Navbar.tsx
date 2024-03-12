@@ -8,10 +8,12 @@ import { CodeCont } from "../../../contexts/CodeContext";
 import { CodeSettingsCont } from "../../../contexts/CodeSettingsContext";
 import { downloadCodeAsZip } from "../../../config/CodeLogic";
 import { Toaster, toast } from "react-hot-toast";
-import { updateProject } from "../../../functions/project";
+import { sendInvite, updateProject } from "../../../functions/project";
 import { AiOutlineLoading, AiOutlineUsergroupAdd } from "react-icons/ai";
 import Collaborator from "./Collaborator";
 import { BsToggle2Off, BsToggle2On } from "react-icons/bs";
+import { IoIosPersonAdd } from "react-icons/io";
+import swal from "sweetalert";
 
 const Navbar = ({
   setShowMinScreen,
@@ -30,6 +32,14 @@ const Navbar = ({
   const [saveLoading, setsaveLoading] = useState<boolean>(false);
   const [showCollab, setshowCollab] = useState<boolean>(false);
 
+  let activeOwner = localStorage.getItem("active_owner");
+  let user: any = localStorage.getItem("devbin_user");
+  user = JSON.parse(user);
+  user = user._id;
+
+  let isOwner = activeOwner === user;
+  // console.log({ isOwner });
+
   return (
     <>
       {showSettings && <Settings setshowSettings={setshowSettings} />}
@@ -47,12 +57,32 @@ const Navbar = ({
         </div>
 
         <div className="gap-3 border-b-[#1e1e1e] bg-[#101010] flex items-center">
-          <button
-            onClick={() => setshowCollab(true)}
-            className="bg-pry h-full sm:px-4 px-2 gap-2 flex text-white justify-center rounded-sm items-center"
-          >
-            <AiOutlineUsergroupAdd />
-          </button>
+          {isOwner ? (
+            <button
+              onClick={() => setshowCollab(true)}
+              className="bg-pry h-full sm:px-4 px-2 gap-2 flex text-white justify-center rounded-sm items-center"
+            >
+              <AiOutlineUsergroupAdd />
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                swal({
+                  title: "Part of a Project?",
+                  text: "Do you want to send a request to be a part of this project",
+                  //@ts-ignore
+                  buttons: true,
+                }).then(async (willDelete) => {
+                  if (willDelete) {
+                    await sendInvite({ id: activeID });
+                  }
+                });
+              }}
+              className="bg-pry h-full sm:px-4 px-2 gap-2 flex text-white justify-center rounded-sm items-center"
+            >
+              <IoIosPersonAdd />
+            </button>
+          )}
           <button
             onClick={() => {
               setLive(!live);

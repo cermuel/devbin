@@ -96,7 +96,7 @@ export default (io: Server) => {
           socket.join(room);
           socket.emit(
             "success",
-            " successfully",
+            "successfully",
           );
         },
       );

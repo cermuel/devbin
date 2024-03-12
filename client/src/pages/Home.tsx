@@ -30,6 +30,7 @@ const Home = () => {
         {projects && projects?.length > 0 ? (
           filteredProjects.length > 0 ? (
             filteredProjects?.map((project: any, i: number) => {
+              console.log(project);
               return (
                 <Projects
                   owner={project.owner}

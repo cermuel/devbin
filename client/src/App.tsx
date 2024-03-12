@@ -26,7 +26,6 @@ const knownRoutes = [
 const allroutes = knownRoutes.filter((route: string) =>
   route.includes(window.location.pathname)
 );
-
 const isProfile = window.location.pathname.includes("/code/profile/");
 
 function App() {

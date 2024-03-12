@@ -7,9 +7,10 @@ import {
 } from "../../types/functions/project";
 import { Dispatch } from "react";
 import { NavigateFunction } from "react-router-dom";
+import swal from "sweetalert";
 
-const BASEURL = process.env.REACT_APP_BASE_URL;
-const TOKEN = localStorage.getItem("devbin_token");
+export const BASEURL = process.env.REACT_APP_BASE_URL;
+export const TOKEN = localStorage.getItem("devbin_token");
 
 export const createProject = async ({
   project,
@@ -224,6 +225,7 @@ export const InvitesSent = async ({
     });
 
     setInvites(invites?.data?.data?.requests);
+    console.log(invites.data);
 
     // setLoading(false);
   } catch (err: any) {
@@ -276,6 +278,69 @@ export const declineRequest = async ({ id }: { id: string }) => {
   try {
     let accept = await axios.post(
       `${BASEURL}projects/invite/${id}/respond`,
+      { response: RespondInvite.rejected },
+      {
+        headers: { Authorization: `${TOKEN}` },
+      }
+    );
+    console.log(accept.data);
+
+    toast.success("Request Accepted");
+  } catch (err: any) {
+    console.log(err);
+    let message =
+      err?.response.data?.msg || err?.message || `An error occurred`;
+    toast.error(message);
+  }
+};
+
+export const sendInvite = async ({ id }: { id: string }) => {
+  try {
+    let sent = await axios.post(
+      `${BASEURL}projects/${id}/request`,
+      {},
+      {
+        headers: { Authorization: `${TOKEN}` },
+      }
+    );
+
+    swal(sent.data.msg, {
+      icon: "success",
+    });
+  } catch (err: any) {
+    console.log(err);
+    let message =
+      err?.response.data?.msg || err?.message || `An error occurred`;
+
+    swal(message, {
+      icon: "error",
+    });
+  }
+};
+
+export const acceptInvite = async ({ id }: { id: string }) => {
+  try {
+    let accept = await axios.post(
+      `${BASEURL}projects/request/${id}/respond`,
+      { response: RespondInvite.accepted },
+      {
+        headers: { Authorization: `${TOKEN}` },
+      }
+    );
+    console.log(accept.data);
+    toast.success("Request Accepted");
+  } catch (err: any) {
+    console.log(err);
+    let message =
+      err?.response.data?.msg || err?.message || `An error occurred`;
+    toast.error(message);
+  }
+};
+
+export const declineInvite = async ({ id }: { id: string }) => {
+  try {
+    let accept = await axios.post(
+      `${BASEURL}projects/request/${id}/respond`,
       { response: RespondInvite.rejected },
       {
         headers: { Authorization: `${TOKEN}` },

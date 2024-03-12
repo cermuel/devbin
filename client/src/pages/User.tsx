@@ -62,6 +62,7 @@ const User = () => {
                   key={i}
                   projectName={project.name}
                   id={project._id}
+                  owner={project.owner}
                 />
               );
             })

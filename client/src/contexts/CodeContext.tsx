@@ -54,16 +54,21 @@ body{
   setJSEditor: () => {},
 });
 
+export const handleSession = () => {
+  socket.on("session", (data: any) => {
+    const { sessionId, user } = data;
+    console.log({ sessionId, user });
+    socket.auth = { sessionId };
+    socket.user = { user };
+    socket.userId = user._id;
+    localStorage.setItem("devbin_sessionId", sessionId);
+    localStorage.setItem("devbin_user", JSON.stringify(user));
+  });
+};
+
 const CodeContext = ({ children }: { children: React.ReactNode }) => {
   useLayoutEffect(() => {
-    socket.on("session", (data: any) => {
-      const { sessionId, user } = data;
-      socket.auth = { sessionId };
-      socket.user = { user };
-      socket.userId = user._id;
-      localStorage.setItem("devbin_sessionId", sessionId);
-      localStorage.setItem("devbin_user", JSON.stringify(user));
-    });
+    handleSession();
   }, []);
   const [HTML, setHTML] = useState<string>(() => {
     return localStorageValueHTML
@@ -107,7 +112,7 @@ const CodeContext = ({ children }: { children: React.ReactNode }) => {
   const [JSEditor, setJSEditor] = useState(null);
   useEffect(() => {
     handleJoin({ live, setLiveError, socket, activeID });
-    console.log(`ran`);
+    // console.log(`ran`);
   }, []);
   useEffect(() => {
     console.log(liveError);

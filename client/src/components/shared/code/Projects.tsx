@@ -19,7 +19,7 @@ const Projects = ({
   js: string;
   projectName: string;
   id: string;
-  owner?: string;
+  owner: string;
 }) => {
   const { setactiveID } = React.useContext(CodeCont);
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ const Projects = ({
     <div className="sm:w-[500px] flex flex-col h-64 sm:h-80 w-full relative m-4">
       <div className="absolute w-full opacity-0 hover:opacity-80 flex flex-col justify-center items-center gap-2 rounded-md bg-white h-[80%]">
         <button
-          onClick={() => selectProject({ id, setactiveID, navigate })}
+          onClick={() => selectProject({ id, setactiveID, navigate, owner })}
           className="w-28 rounded-3xl h-8 flex justify-center items-center bg-pry text-sm text-white"
         >
           SELECT

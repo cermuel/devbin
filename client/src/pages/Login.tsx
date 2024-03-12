@@ -26,7 +26,6 @@ const Login = () => {
         <img src={gif} className="w-full h-full" alt="" />
       </section>
       <section className="w-[35%] max-md:w-full h-full py-12 flex justify-between items-center flex-col">
-        {" "}
         <Toaster />
         <img src={longlogo} className="w-[40%]" alt="" />
         <div className="w-full space-y-4 max-lg:px-20 max-md:px-12 max-sm:px-4">

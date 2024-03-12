@@ -17,7 +17,8 @@ import {
   save,
   toShow,
 } from "../utils/ProjectUtils";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+import Offline from "../components/code/Offline";
 
 const Code = () => {
   const navigate = useNavigate();
@@ -46,6 +47,9 @@ const Code = () => {
   const { setCodeName, theme, fontSize, editorNotMounted } =
     useContext(CodeSettingsCont);
 
+  let user: any = localStorage.getItem("devbin_user");
+  user = JSON.parse(user);
+  // console.log({ activeID, live, user: user._id });
   //
   //states
   const [filesID, setFilesID] = useState<FileID>({
@@ -77,7 +81,7 @@ const Code = () => {
     setLive(live);
     handleJoin({ live, socket, activeID, setLiveError });
   }, [live]);
-
+  // console.log({});
   useEffect(() => {
     localStorage.setItem("HTML", HTML);
     live == true &&
@@ -110,32 +114,33 @@ const Code = () => {
     });
   }, [HTML]);
 
-  useEffect(() => {
-    localStorage.setItem("CSS", CSS);
-    live == true &&
-      save({
-        socket,
-        room: activeID,
-        content: CSS,
-        file: filesID.CSSID,
-      });
-    handleSucessError(socket);
-  }, [CSS]);
+  // useEffect(() => {
+  //   localStorage.setItem("CSS", CSS);
+  //   live == true &&
+  //     save({
+  //       socket,
+  //       room: activeID,
+  //       content: CSS,
+  //       file: filesID.CSSID,
+  //     });
+  //   handleSucessError(socket);
+  // }, [CSS]);
 
-  useEffect(() => {
-    localStorage.setItem("JS", JS);
-    live == true &&
-      save({
-        socket,
-        room: activeID,
-        content: JS,
-        file: filesID.JSID,
-      });
-    handleSucessError(socket);
-  }, [JS]);
+  // useEffect(() => {
+  //   localStorage.setItem("JS", JS);
+  //   live == true &&
+  //     save({
+  //       socket,
+  //       room: activeID,
+  //       content: JS,
+  //       file: filesID.JSID,
+  //     });
+  //   handleSucessError(socket);
+  // }, [JS]);
 
   useEffect(() => {
     socket.on("insertText", (data: insertTextType) => {
+      console.log({ insertText: data });
       if (data) {
         HTMLEditor?.setPosition({
           lineNumber: data?.cursorPosition?.line,
@@ -167,17 +172,7 @@ const Code = () => {
   ];
 
   if (navigator.onLine) {
-    return (
-      <div className="w-full h-screen flex flex-col justify-center items-center">
-        <h1 className="text-xl mb-2">Please Go Online To Continue</h1>
-        <button
-          onClick={() => window.location.reload()}
-          className="bg-[#737cde] text-white px-4 py-2 text-sm font-medium rounded-sm"
-        >
-          Retry
-        </button>
-      </div>
-    );
+    return <Offline />;
   } else {
     if (activeID && activeID !== "") {
       return (
