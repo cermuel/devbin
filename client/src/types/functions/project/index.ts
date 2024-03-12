@@ -28,6 +28,7 @@ export type insertTextType = {
   text: string;
   timestamp: Date;
   file: string;
+  fileType: filesTypeType;
 };
 
 export enum RespondInvite {

@@ -77,6 +77,7 @@ export const insertText = ({
   data,
   file,
   socket,
+  fileType,
 }: {
   room: string;
   data: {
@@ -89,8 +90,9 @@ export const insertText = ({
   };
   file: string;
   socket: any;
+  fileType: string;
 }) => {
-  socket.emit("insertText", { room, data, file });
+  socket.emit("insertText", { room, data, file, fileType });
 };
 
 export const deleteText = ({
@@ -98,6 +100,7 @@ export const deleteText = ({
   data,
   file,
   socket,
+  fileType,
 }: {
   room: string;
   data: {
@@ -110,8 +113,9 @@ export const deleteText = ({
   };
   file: string;
   socket: any;
+  fileType: string;
 }) => {
-  socket.emit("deleteText", { room, data, file });
+  socket.emit("deleteText", { room, data, file, fileType });
 };
 
 export let toShow = ["HTML", "CSS", "JAVASCRIPT", "OUTPUT"];

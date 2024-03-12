@@ -8,7 +8,12 @@ import Loading from "../components/shared/code/Loading";
 import { useNavigate } from "react-router-dom";
 import { isAuth } from "../utils/CodeUtils";
 import { getProject } from "../functions/project";
-import { FileID, insertTextType } from "../types/functions/project";
+import {
+  FileID,
+  filesTypeType,
+  insertTextType,
+} from "../types/functions/project";
+import * as monaco from "@monaco-editor/react";
 import {
   deleteText,
   handleJoin,
@@ -17,7 +22,7 @@ import {
   save,
   toShow,
 } from "../utils/ProjectUtils";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import Offline from "../components/code/Offline";
 
 const Code = () => {
@@ -81,7 +86,7 @@ const Code = () => {
     setLive(live);
     handleJoin({ live, socket, activeID, setLiveError });
   }, [live]);
-  // console.log({});
+
   useEffect(() => {
     localStorage.setItem("HTML", HTML);
     live == true &&
@@ -91,7 +96,9 @@ const Code = () => {
         content: HTML,
         file: filesID.HTMLID,
       });
+
     handleSucessError(socket);
+
     insertText({
       socket,
       room: activeID,
@@ -101,6 +108,7 @@ const Code = () => {
         cursorPosition: HTMLCursor,
         text: HTML,
       },
+      fileType: "html",
     });
     deleteText({
       socket,
@@ -111,41 +119,91 @@ const Code = () => {
         cursorPosition: HTMLCursor,
         text: HTML,
       },
+      fileType: "html",
     });
   }, [HTML]);
 
-  // useEffect(() => {
-  //   localStorage.setItem("CSS", CSS);
-  //   live == true &&
-  //     save({
-  //       socket,
-  //       room: activeID,
-  //       content: CSS,
-  //       file: filesID.CSSID,
-  //     });
-  //   handleSucessError(socket);
-  // }, [CSS]);
+  useEffect(() => {
+    localStorage.setItem("CSS", CSS);
+    live == true &&
+      save({
+        socket,
+        room: activeID,
+        content: CSS,
+        file: filesID.CSSID,
+      });
 
-  // useEffect(() => {
-  //   localStorage.setItem("JS", JS);
-  //   live == true &&
-  //     save({
-  //       socket,
-  //       room: activeID,
-  //       content: JS,
-  //       file: filesID.JSID,
-  //     });
-  //   handleSucessError(socket);
-  // }, [JS]);
+    handleSucessError(socket);
+    insertText({
+      socket,
+      room: activeID,
+      file: filesID.CSSID,
+      data: {
+        timestamp: new Date(),
+        cursorPosition: CSSCursor,
+        text: CSS,
+      },
+      fileType: filesTypeType.css,
+    });
+    deleteText({
+      socket,
+      room: activeID,
+      file: filesID.CSSID,
+      data: {
+        timestamp: new Date(),
+        cursorPosition: CSSCursor,
+        text: CSS,
+      },
+      fileType: filesTypeType.css,
+    });
+  }, [CSS]);
+
+  useEffect(() => {
+    localStorage.setItem("JS", JS);
+    live == true &&
+      save({
+        socket,
+        room: activeID,
+        content: JS,
+        file: filesID.JSID,
+      });
+
+    handleSucessError(socket);
+    insertText({
+      socket,
+      room: activeID,
+      file: filesID.JSID,
+      data: {
+        timestamp: new Date(),
+        cursorPosition: JSCursor,
+        text: JS,
+      },
+      fileType: filesTypeType.js,
+    });
+    deleteText({
+      socket,
+      room: activeID,
+      file: filesID.JSID,
+      data: {
+        timestamp: new Date(),
+        cursorPosition: JSCursor,
+        text: JS,
+      },
+      fileType: filesTypeType.js,
+    });
+  }, [JS]);
 
   useEffect(() => {
     socket.on("insertText", (data: insertTextType) => {
       console.log({ insertText: data });
       if (data) {
-        HTMLEditor?.setPosition({
-          lineNumber: data?.cursorPosition?.line,
-          column: data?.cursorPosition?.column,
-        });
+        if (data.fileType === filesTypeType.html) {
+          setHTML(data.text);
+        } else if (data.fileType === filesTypeType.css) {
+          setCSS(data.text);
+        } else {
+          setJS(data.text);
+        }
       }
     });
   }, [socket]);
