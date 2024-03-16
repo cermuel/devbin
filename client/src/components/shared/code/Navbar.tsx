@@ -86,10 +86,10 @@ const Navbar = ({
           <button
             onClick={() => {
               setLive(!live);
-              liveError == "You are not a collaborator" && setLive(false);
-              live == false
+              liveError === "You are not a collaborator" && setLive(false);
+              live === false
                 ? toast(liveError)
-                : liveError == "Error going live, try again!"
+                : liveError === "Error going live, try again!"
                 ? setLive(false)
                 : toast("You've disconnected");
             }}

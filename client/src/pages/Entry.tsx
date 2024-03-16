@@ -1,5 +1,4 @@
-import React, { useEffect, useLayoutEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Entry = () => {
   let isAuth = localStorage.getItem("devbin_token");

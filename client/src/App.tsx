@@ -1,4 +1,3 @@
-import socket from "socket.io-client";
 import CodeContext from "./contexts/CodeContext";
 import Code from "./pages/Code";
 import CodeSettingsContext from "./contexts/CodeSettingsContext";
@@ -10,7 +9,6 @@ import Profile from "./pages/Profile";
 import Entry from "./pages/Entry";
 import CreateProject from "./pages/CreateProject";
 import User from "./pages/User";
-import { all } from "axios";
 import PageNotFound from "./pages/404";
 
 const knownRoutes = [

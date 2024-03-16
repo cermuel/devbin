@@ -1,7 +1,6 @@
 import { useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavTwo from "../components/shared/code/NavTwo";
-import { getMe } from "../functions/user";
 import { isAuth } from "../utils/CodeUtils";
 //@ts-ignore
 import userIMG from "../assets/main.jpeg";
@@ -72,7 +71,7 @@ const Profile = () => {
               <h1
                 onClick={() => setActive(tab)}
                 className={`lg:text-5xl md:text-3xl sm:text-2xl cursor-pointer mb-4 sm:pt-10 text-sm font-bold text-white w-[33%] text-center ${
-                  active == tab && "underline"
+                  active === tab && "underline"
                 } `}
               >
                 {tab}
@@ -81,7 +80,7 @@ const Profile = () => {
           })}
         </div>
         <section className="flex-grow max-h-[92%] gap-8 flex flex-wrap w-full justify-around p-4 px-6 overflow-scroll">
-          {active == tabs[0] ? (
+          {active === tabs[0] ? (
             projects && projects?.length > 0 ? (
               filteredProjects.length > 0 ? (
                 filteredProjects?.map((project: any, i: number) => {
@@ -121,7 +120,7 @@ const Profile = () => {
                 </div>
               </div>
             )
-          ) : active == tabs[1] ? (
+          ) : active === tabs[1] ? (
             requests.length > 0 ? (
               <>
                 <div className="w-full">

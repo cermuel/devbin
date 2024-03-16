@@ -110,10 +110,11 @@ const CodeContext = ({ children }: { children: React.ReactNode }) => {
   const [HTMLEditor, setHTMLEditor] = useState(null);
   const [CSSEditor, setCSSEditor] = useState(null);
   const [JSEditor, setJSEditor] = useState(null);
+
   useEffect(() => {
     handleJoin({ live, setLiveError, socket, activeID });
-    // console.log(`ran`);
   }, []);
+
   useEffect(() => {
     console.log(liveError);
   }, [liveError]);

@@ -1,7 +1,5 @@
-import React, { useEffect } from "react";
-import { FiMaximize2 } from "react-icons/fi";
+import React from "react";
 //@ts-ignore
-import userIMG from "./../../../assets/main.jpeg";
 import { CodeCont } from "../../../contexts/CodeContext";
 import { Link, useNavigate } from "react-router-dom";
 import { selectProject } from "../../../utils/ProjectUtils";

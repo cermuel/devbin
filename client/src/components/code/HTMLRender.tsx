@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface HTMLRendererProps {
   html: string;
@@ -10,19 +10,6 @@ const HTMLRenderer: React.FC<HTMLRendererProps> = ({ html, css, js }) => {
   const [srcDoc, setsrcDoc] = useState<string>();
 
   const iframe = useRef<HTMLIFrameElement>(null);
-  const [k, setk] = useState<number>(1);
-
-  // useEffect(() => {
-  //   iframe?.current?.contentWindow?.addEventListener(
-  //     "keydown",
-  //     (event: any) => {
-  //       if ((event.metaKey || event.ctrlKey) && event.key ==== "s") {
-  //         event.preventDefault(); // Prevent the default "Save As" browser behavior
-  //         alert(`ctrl + s`); // Call your save function here
-  //       }
-  //     }
-  //   );
-  // }, []);
 
   useEffect(() => {
     const timeout = setTimeout(() => {

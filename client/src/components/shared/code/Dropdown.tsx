@@ -1,14 +1,13 @@
-import React, { Dispatch, useState } from "react";
+import React, { Dispatch } from "react";
 import { IoIosLogOut, IoIosSettings } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import { Logout } from "../../../functions/auth";
-import CreateProject from "../../../pages/CreateProject";
+
 const Dropdown = ({
   setshowSettings,
 }: {
   setshowSettings: Dispatch<boolean>;
 }) => {
-  let location = window.location.pathname;
   let navigate = useNavigate();
   return (
     <>

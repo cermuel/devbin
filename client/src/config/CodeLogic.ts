@@ -25,7 +25,7 @@ export const downloadCodeAsZip = ({
   <body>`;
   let defaultHtmlEnd = `</body>
   </html>`;
-  zip.file("index.html", defaultHtmlStart + htmlCode);
+  zip.file("index.html", defaultHtmlStart + htmlCode + defaultHtmlEnd);
   zip.file("style.css", cssCode);
   zip.file("script.js", jsCode);
 

@@ -13,7 +13,6 @@ import {
   filesTypeType,
   insertTextType,
 } from "../types/functions/project";
-import * as monaco from "@monaco-editor/react";
 import {
   deleteText,
   handleJoin,
@@ -22,7 +21,7 @@ import {
   save,
   toShow,
 } from "../utils/ProjectUtils";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import Offline from "../components/code/Offline";
 
 const Code = () => {
@@ -45,15 +44,12 @@ const Code = () => {
     HTMLCursor,
     CSSCursor,
     JSCursor,
-    HTMLEditor,
-    CSSEditor,
-    JSEditor,
   } = useContext(CodeCont);
   const { setCodeName, theme, fontSize, editorNotMounted } =
     useContext(CodeSettingsCont);
 
-  let user: any = localStorage.getItem("devbin_user");
-  user = JSON.parse(user);
+  // let user: any = localStorage.getItem("devbin_user");
+  // user = JSON.parse(user);
   // console.log({ activeID, live, user: user._id });
   //
   //states
@@ -89,7 +85,7 @@ const Code = () => {
 
   useEffect(() => {
     localStorage.setItem("HTML", HTML);
-    live == true &&
+    live === true &&
       save({
         socket,
         room: activeID,
@@ -125,7 +121,7 @@ const Code = () => {
 
   useEffect(() => {
     localStorage.setItem("CSS", CSS);
-    live == true &&
+    live === true &&
       save({
         socket,
         room: activeID,
@@ -160,7 +156,7 @@ const Code = () => {
 
   useEffect(() => {
     localStorage.setItem("JS", JS);
-    live == true &&
+    live === true &&
       save({
         socket,
         room: activeID,

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 //@ts-ignore
 import userLogo from "../../../assets/main.jpeg";
-import { RiDownload2Line, RiSave2Fill } from "react-icons/ri";
 import Settings from "./Settings";
 import Dropdown from "./Dropdown";
 import { IoMdSearch } from "react-icons/io";

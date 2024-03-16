@@ -1,9 +1,8 @@
-import React, { Dispatch, useContext, useState } from "react";
+import React, {  useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { AiOutlineLoading } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import NavTwo from "../components/shared/code/NavTwo";
-import { CodeCont } from "../contexts/CodeContext";
 import { createProject } from "../functions/project";
 import { filesTypeType, projectType } from "../types/functions/project";
 
