@@ -14,7 +14,6 @@ import Loading from "../components/shared/code/Loading";
 import { useNavigate } from "react-router-dom";
 import { isAuth } from "../utils/CodeUtils";
 import { getProject, updateProject } from "../functions/project";
-import { throttle } from "lodash";
 import {
   FileID,
   filesTypeType,
