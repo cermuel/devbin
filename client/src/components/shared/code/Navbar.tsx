@@ -35,7 +35,7 @@ const Navbar = ({
   let activeOwner = localStorage.getItem("active_owner");
   let user: any = localStorage.getItem("devbin_user");
   user = JSON.parse(user);
-  user = user._id;
+  user = user?._id;
 
   let isOwner = activeOwner === user;
   // console.log({ isOwner });

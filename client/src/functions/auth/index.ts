@@ -46,14 +46,14 @@ export const login = async (details: logintype, navigate: any) => {
     let isValidEmail = isEmailAddress(details.email);
     if (!isValidEmail) {
       toast.error(`Invalid Email Address`);
-    } else if (details.password.length < 7) {
+    } else if (details?.password?.length < 7) {
       toast.error(`Password must be at least 7 characters`);
     } else {
       try {
         const loggedUser = await axios.post(`${BASEURL}auth/login`, details);
         let message = loggedUser.data?.message || `Login successful`;
         toast.success(message);
-        localStorage.setItem("devbin_token", loggedUser.data.token);
+        localStorage.setItem("devbin_token", loggedUser?.data?.token);
         setTimeout(() => {
           navigate("/code/home");
           window.location.reload();

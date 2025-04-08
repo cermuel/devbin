@@ -8,8 +8,9 @@ const localStorageValueCSS = localStorage.getItem("CSS");
 const localStorageValueJS = localStorage.getItem("JS");
 const localStorageID = localStorage.getItem("devbin_activecode");
 const token = localStorage.getItem("devbin_token");
+const BASEURL = process.env.REACT_APP_BASE_URL || "";
 
-let socket: any = io("http://localhost:5000", {
+let socket: any = io("https://devbin.oreos.me/", {
   auth: {
     token: token,
   },
@@ -55,7 +56,9 @@ body{
 });
 
 export const handleSession = () => {
+  console.log("handled session");
   socket.on("session", (data: any) => {
+    console.log({ data });
     const { sessionId, user } = data;
     console.log({ sessionId, user });
     socket.auth = { sessionId };
@@ -68,6 +71,7 @@ export const handleSession = () => {
 
 const CodeContext = ({ children }: { children: React.ReactNode }) => {
   useLayoutEffect(() => {
+    console.log({ socket });
     handleSession();
   }, []);
   const [HTML, setHTML] = useState<string>(() => {

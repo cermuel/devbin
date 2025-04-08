@@ -24,7 +24,7 @@ const HTMLRenderer: React.FC<HTMLRendererProps> = ({ html, css, js }) => {
         </body>
       </html>
     `);
-    }, 250);
+    }, 300);
     return () => clearTimeout(timeout);
   }, [html, css, js]);
 

@@ -1,4 +1,10 @@
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import CodeLayout from "../components/layouts/CodeLayout";
 import { CodeCont } from "../contexts/CodeContext";
 import { CodeSettingsCont } from "../contexts/CodeSettingsContext";
@@ -7,7 +13,8 @@ import HTMLRenderer from "../components/code/HTMLRender";
 import Loading from "../components/shared/code/Loading";
 import { useNavigate } from "react-router-dom";
 import { isAuth } from "../utils/CodeUtils";
-import { getProject } from "../functions/project";
+import { getProject, updateProject } from "../functions/project";
+import { throttle } from "lodash";
 import {
   FileID,
   filesTypeType,
@@ -21,11 +28,38 @@ import {
   save,
   toShow,
 } from "../utils/ProjectUtils";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import Offline from "../components/code/Offline";
 
 const Code = () => {
   const navigate = useNavigate();
+  const lastSentTextRef = useRef({ html: "", css: "", js: "" });
+  const [saveLoading, setsaveLoading] = useState(false);
+
+  const saveFunc = () => {
+    updateProject({
+      id: activeID,
+      codeName,
+      setLoading: setsaveLoading,
+    });
+  };
+  useEffect(() => {
+    const handleSaveShortcut = (e: KeyboardEvent) => {
+      const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+      const isSaveKey = (isMac && e.metaKey) || (!isMac && e.ctrlKey);
+
+      if (isSaveKey && e.key === "s") {
+        e.preventDefault(); // Prevent browser save
+        saveFunc(); // 🔥 Call your save function here
+      }
+    };
+
+    window.addEventListener("keydown", handleSaveShortcut);
+
+    return () => {
+      window.removeEventListener("keydown", handleSaveShortcut);
+    };
+  }, []);
 
   //
   //context
@@ -45,7 +79,7 @@ const Code = () => {
     CSSCursor,
     JSCursor,
   } = useContext(CodeCont);
-  const { setCodeName, theme, fontSize, editorNotMounted } =
+  const { setCodeName, codeName, theme, fontSize, editorNotMounted } =
     useContext(CodeSettingsCont);
 
   // let user: any = localStorage.getItem("devbin_user");
@@ -76,132 +110,161 @@ const Code = () => {
     };
     isAuth(navigate);
     activeID !== "" && getProject(toSend);
-  }, []);
+  }, [activeID]);
 
   useEffect(() => {
     setLive(live);
     handleJoin({ live, socket, activeID, setLiveError });
   }, [live]);
-
   useEffect(() => {
     localStorage.setItem("HTML", HTML);
-    live === true &&
-      save({
-        socket,
-        room: activeID,
-        content: HTML,
-        file: filesID.HTMLID,
-      });
 
-    handleSucessError(socket);
+    const timeoutId = setTimeout(() => {
+      if (live) {
+        // Save the content
+        save({
+          socket,
+          room: activeID,
+          content: HTML,
+          file: filesID.HTMLID,
+        });
 
-    insertText({
-      socket,
-      room: activeID,
-      file: filesID.HTMLID,
-      data: {
-        timestamp: new Date(),
-        cursorPosition: HTMLCursor,
-        text: HTML,
-      },
-      fileType: "html",
-    });
-    deleteText({
-      socket,
-      room: activeID,
-      file: filesID.HTMLID,
-      data: {
-        timestamp: new Date(),
-        cursorPosition: HTMLCursor,
-        text: HTML,
-      },
-      fileType: "html",
-    });
+        handleSucessError(socket);
+
+        lastSentTextRef.current["html"] = HTML;
+
+        // Send insertText
+        insertText({
+          socket,
+          room: activeID,
+          file: filesID.HTMLID,
+          data: {
+            timestamp: new Date(),
+            cursorPosition: HTMLCursor,
+            text: HTML,
+          },
+          fileType: "html",
+        });
+
+        // Send deleteText
+        deleteText({
+          socket,
+          room: activeID,
+          file: filesID.HTMLID,
+          data: {
+            timestamp: new Date(),
+            cursorPosition: HTMLCursor,
+            text: HTML,
+          },
+          fileType: "html",
+        });
+      }
+    }, 1500);
+
+    return () => clearTimeout(timeoutId); // Cancel previous timeout if user types again
   }, [HTML]);
 
   useEffect(() => {
     localStorage.setItem("CSS", CSS);
-    live === true &&
-      save({
-        socket,
-        room: activeID,
-        content: CSS,
-        file: filesID.CSSID,
-      });
 
-    handleSucessError(socket);
-    insertText({
-      socket,
-      room: activeID,
-      file: filesID.CSSID,
-      data: {
-        timestamp: new Date(),
-        cursorPosition: CSSCursor,
-        text: CSS,
-      },
-      fileType: filesTypeType.css,
-    });
-    deleteText({
-      socket,
-      room: activeID,
-      file: filesID.CSSID,
-      data: {
-        timestamp: new Date(),
-        cursorPosition: CSSCursor,
-        text: CSS,
-      },
-      fileType: filesTypeType.css,
-    });
+    const timeoutId = setTimeout(() => {
+      if (live) {
+        save({
+          socket,
+          room: activeID,
+          content: CSS,
+          file: filesID.CSSID,
+        });
+
+        handleSucessError(socket);
+
+        lastSentTextRef.current["css"] = CSS;
+
+        insertText({
+          socket,
+          room: activeID,
+          file: filesID.CSSID,
+          data: {
+            timestamp: new Date(),
+            cursorPosition: CSSCursor,
+            text: CSS,
+          },
+          fileType: filesTypeType.css,
+        });
+
+        deleteText({
+          socket,
+          room: activeID,
+          file: filesID.CSSID,
+          data: {
+            timestamp: new Date(),
+            cursorPosition: CSSCursor,
+            text: CSS,
+          },
+          fileType: filesTypeType.css,
+        });
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
   }, [CSS]);
 
   useEffect(() => {
     localStorage.setItem("JS", JS);
-    live === true &&
-      save({
-        socket,
-        room: activeID,
-        content: JS,
-        file: filesID.JSID,
-      });
 
-    handleSucessError(socket);
-    insertText({
-      socket,
-      room: activeID,
-      file: filesID.JSID,
-      data: {
-        timestamp: new Date(),
-        cursorPosition: JSCursor,
-        text: JS,
-      },
-      fileType: filesTypeType.js,
-    });
-    deleteText({
-      socket,
-      room: activeID,
-      file: filesID.JSID,
-      data: {
-        timestamp: new Date(),
-        cursorPosition: JSCursor,
-        text: JS,
-      },
-      fileType: filesTypeType.js,
-    });
+    const timeoutId = setTimeout(() => {
+      if (live) {
+        save({
+          socket,
+          room: activeID,
+          content: JS,
+          file: filesID.JSID,
+        });
+
+        handleSucessError(socket);
+
+        lastSentTextRef.current["js"] = JS;
+
+        insertText({
+          socket,
+          room: activeID,
+          file: filesID.JSID,
+          data: {
+            timestamp: new Date(),
+            cursorPosition: JSCursor,
+            text: JS,
+          },
+          fileType: filesTypeType.js,
+        });
+
+        deleteText({
+          socket,
+          room: activeID,
+          file: filesID.JSID,
+          data: {
+            timestamp: new Date(),
+            cursorPosition: JSCursor,
+            text: JS,
+          },
+          fileType: filesTypeType.js,
+        });
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
   }, [JS]);
 
   useEffect(() => {
-    socket.on("insertText", (data: insertTextType) => {
-      console.log({ insertText: data });
-      if (data) {
-        if (data.fileType === filesTypeType.html) {
-          setHTML(data.text);
-        } else if (data.fileType === filesTypeType.css) {
-          setCSS(data.text);
-        } else {
-          setJS(data.text);
-        }
+    const onInsertText = (data: insertTextType) => {
+      if (data?.fileType === "html") {
+        setHTML(data.text);
+      } else if (data?.fileType === "css") {
+        setCSS(data.text);
+      } else {
+        setJS(data.text);
       }
-    });
+    };
+    socket.on("insertText", onInsertText);
   }, [socket]);
 
   const editors = [
@@ -225,7 +288,7 @@ const Code = () => {
     },
   ];
 
-  if (navigator.onLine) {
+  if (!navigator.onLine) {
     return <Offline />;
   } else {
     if (activeID && activeID !== "") {

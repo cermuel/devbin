@@ -34,6 +34,7 @@ const Profile = () => {
     isAuth(navigate);
     setUserLoading(true);
     let user: any = localStorage.getItem("devbin_user");
+
     if (user !== null || undefined) {
       user = JSON.parse(user);
       setUserLoading(false);
@@ -66,9 +67,10 @@ const Profile = () => {
       </section>
       <section className="h-[68%] relative w-full bg-black border-t-[1px] border-t-gray-800 sm:pb-14 p-4 max-sm:h-[75%]">
         <div className="flex">
-          {tabs.map((tab: string) => {
+          {tabs.map((tab: string, index) => {
             return (
               <h1
+                key={index}
                 onClick={() => setActive(tab)}
                 className={`lg:text-5xl md:text-3xl sm:text-2xl cursor-pointer mb-4 sm:pt-10 text-sm font-bold text-white w-[33%] text-center ${
                   active === tab && "underline"
@@ -126,7 +128,13 @@ const Profile = () => {
                 <div className="w-full">
                   <RequestHeader />
                   {requests.map((request: any) => {
-                    return <Request request={request} />;
+                    return (
+                      <Request
+                        request={request}
+                        id={request?.project?._id}
+                        owner={request?.sender?._id}
+                      />
+                    );
                   })}
                 </div>
               </>
