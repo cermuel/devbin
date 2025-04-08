@@ -12,7 +12,7 @@ services:
     build: 
       dockerfile: ./Dockerfile
     ports:
-      - "3000:3012"
+      - "3000:3000"
     volumes:
       - ./src:/app/src
     environment:

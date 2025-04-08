@@ -93,13 +93,13 @@ const start =
         process
           .env
           .MONGO_URI ||
-          "mongodb://localhost:27017/samo",
+        "mongodb://localhost:27017/samo",
       );
       http.listen(
         port,
         () => {
           console.log(
-            "Example app listening on port 5000!",
+            `Example app listening on port ${port}!`,
           );
         },
       );
