@@ -134,13 +134,11 @@ router.get(
         req.user,
       );
 
-    return res
-      .status(StatusCodes.OK)
-      .json({
-        msg: "Requests fetched Sucessfully",
-        data: { requests },
-        statusCode: StatusCodes.OK,
-      });
+    res.status(StatusCodes.OK).json({
+      msg: "Requests fetched Sucessfully",
+      data: { requests },
+      statusCode: StatusCodes.OK,
+    });
   },
 );
 
@@ -164,13 +162,11 @@ router.get(
         req.user,
       );
 
-    return res
-      .status(StatusCodes.OK)
-      .json({
-        msg: "Requests fetched Sucessfully",
-        data: { requests },
-        statusCode: StatusCodes.OK,
-      });
+    res.status(StatusCodes.OK).json({
+      msg: "Requests fetched Sucessfully",
+      data: { requests },
+      statusCode: StatusCodes.OK,
+    });
   },
 );
 
@@ -194,13 +190,11 @@ router.get(
         req.user,
       );
 
-    return res
-      .status(StatusCodes.OK)
-      .json({
-        msg: "Sent Requests fetched Sucessfully",
-        data: { requests },
-        statusCode: StatusCodes.OK,
-      });
+    res.status(StatusCodes.OK).json({
+      msg: "Sent Requests fetched Sucessfully",
+      data: { requests },
+      statusCode: StatusCodes.OK,
+    });
   },
 );
 
@@ -224,13 +218,11 @@ router.get(
         req.user,
       );
 
-    return res
-      .status(StatusCodes.OK)
-      .json({
-        msg: "Sent Invites fetched Sucessfully",
-        data: { invites },
-        statusCode: StatusCodes.OK,
-      });
+    res.status(StatusCodes.OK).json({
+      msg: "Sent Invites fetched Sucessfully",
+      data: { invites },
+      statusCode: StatusCodes.OK,
+    });
   },
 );
 
@@ -288,7 +280,7 @@ router
         project.owner.toString() !==
         req.user._id.toString()
       ) {
-        return res
+        res
           .status(
             StatusCodes.UNAUTHORIZED,
           )
@@ -297,6 +289,7 @@ router
             statusCode:
               StatusCodes.UNAUTHORIZED,
           });
+        return;
       }
       project.name = req.body.name;
       await project.save();
@@ -332,12 +325,10 @@ router.post(
         req.user._id,
       );
 
-    return res
-      .status(StatusCodes.OK)
-      .json({
-        msg,
-        statusCode: StatusCodes.OK,
-      });
+    res.status(StatusCodes.OK).json({
+      msg,
+      statusCode: StatusCodes.OK,
+    });
   },
 );
 
@@ -363,12 +354,10 @@ router.post(
         req.user._id,
       );
 
-    return res
-      .status(StatusCodes.OK)
-      .json({
-        msg,
-        statusCode: StatusCodes.OK,
-      });
+    res.status(StatusCodes.OK).json({
+      msg,
+      statusCode: StatusCodes.OK,
+    });
   },
 );
 
