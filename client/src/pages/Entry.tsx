@@ -8,7 +8,7 @@ const Entry = () => {
 
   return (
     <div className="bg-black relative overflow-scroll w-screen h-screen sm:px-14 md:px-28 px-6">
-      <nav className="text-white top-0 absolute left-0 flex w-full justify-between items-center p-6 sm:px-14 md:px-28">
+      <nav className="text-white top-0 z-10 absolute left-0 flex w-full justify-between items-center p-6 sm:px-14 md:px-28">
         <div>
           <button className="text-pry font-bold">DEVBIN</button>
         </div>
@@ -16,7 +16,7 @@ const Entry = () => {
           onClick={() => {
             isAuth ? navigate("/code/home") : navigate("/auth/login");
           }}
-          className="underline hover:no-underline"
+          className="hover:underline cursor-pointer"
         >
           {isAuth ? "Go Home" : "Login"}
         </button>
@@ -24,7 +24,7 @@ const Entry = () => {
       <section className="text-white md:h-screen relative flex gap-8 items-center max-md:justify-center max-md:mt-20 max-md:flex-col max-md:pb-20">
         <img src={EntryImage} className="w-[300px] md:hidden" alt="" />
         <div className="flex flex-col flex-1 gap-4 items-start">
-          <h1 className="md:text-7xl text-3xl font-bold leading-snug w-full">
+          <h1 className="md:text-7xl text-3xl font-bold w-full md:leading-[1.2]">
             The whole digital <br className="max-md:hidden" /> mix is in{" "}
             <span className="bg-pry tracking-wider px-2">DevBIN</span>
           </h1>
